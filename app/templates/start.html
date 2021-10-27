@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+<html>
+    <h1>Login or make new account</h1>
+    <form action="/auth", method="POST">
+        <label for="username">Username</label>
+        <input type="text" name="username">
+        <br>
+        <label for="password">Password</label>
+        <input type="text" name="password">
+        <br>
+        <input type="submit" value="login" />
+    </form>
+    <form action="/make_account", method="POST">
+        <label for="username">Username</label>
+        <input type="text" name="username">
+        <br>
+        <label for="password">Password</label>
+        <input type="text" name="password">
+        <br>
+        <input type="submit" value="make account" />
+    </form>
+</html>
