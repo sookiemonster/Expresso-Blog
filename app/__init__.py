@@ -21,6 +21,7 @@ def index():
     
         
     return render_template("start.html")
+    
 @app.route("/auth", methods=["GET", "POST"])
 def auth():
     db = sqlite3.connect("users.db")
@@ -29,7 +30,8 @@ def auth():
     user = c.fetchone()
     if user != None:
         return render_template("response.html")
-    return render_template("failure.html")
+    return render_template("error.html")
+
 @app.route("/make_account", methods=["GET", "POST"])
 def make():
     db = sqlite3.connect("users.db")
@@ -37,7 +39,7 @@ def make():
     try:
         c.execute("INSERT INTO user(username, password) VALUES(?, ?)", (request.form['username'], request.form['password']))
     except sqlite3.IntegrityError:
-        return render_template("failure.html")
+        return render_template("error.html")
     db.commit()
     db.close()
     return render_template("login.html")

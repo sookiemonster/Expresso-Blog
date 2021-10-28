@@ -3,3 +3,6 @@ Add initial file structure
 
 danielS -- 2021-10-27 22:33
 Add initial design document
+
+danielS -- 2021-10-28 13:56
+Update file structure to match design document. Add basic HTML structure to templates.
