@@ -6,3 +6,6 @@ Add initial design document
 
 danielS -- 2021-10-28 13:56
 Update file structure to match design document. Add basic HTML structure to templates.
+
+joshuaK -- 2021-10-28 19:00
+Added login and make account
