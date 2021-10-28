@@ -7,5 +7,21 @@
         <link rel="stylesheet" href="../static/css/style.css">
     </head>
     <body>
+        <form action="/register", method="POST">
+            <label for="username">Username</label>
+            <input type="text" name="username">
+            <br>
+            <label for="password">Password</label>
+            <input type="text" name="password">
+            <br>
+            <label for="display name">Display Name</label>
+            <input type="text" name="display">
+            <br>
+            <input type="submit" value="make account" />
+        </form>
+        <datalist>{{taken}}</datalist>
+        {% if taken == true %}
+            <h2>I am sorry this username is taken please enter a new one</h2>
+        {% endif %}
     </body>
 </html>

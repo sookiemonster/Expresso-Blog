@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, redirect
 import sqlite3
 
 app = Flask(__name__)
@@ -20,7 +20,7 @@ def index():
                 '''
     
         
-    return render_template("start.html")
+    return render_template("home.html")
     
 @app.route("/auth", methods=["GET", "POST"])
 def auth():
@@ -29,20 +29,23 @@ def auth():
     c.execute("SELECT * FROM USER WHERE username=? AND password=?", (request.form['username'], request.form['password']))
     user = c.fetchone()
     if user != None:
-        return render_template("response.html")
+        return redirect("/")
     return render_template("error.html")
 
-@app.route("/make_account", methods=["GET", "POST"])
+@app.route("/register", methods=["GET", "POST"])
 def make():
-    db = sqlite3.connect("users.db")
-    c = db.cursor()
-    try:
-        c.execute("INSERT INTO user(username, password) VALUES(?, ?)", (request.form['username'], request.form['password']))
-    except sqlite3.IntegrityError:
-        return render_template("error.html")
-    db.commit()
-    db.close()
-    return render_template("login.html")
+    if request.method == "POST":
+        db = sqlite3.connect("users.db")
+        c = db.cursor()
+        try:
+            c.execute("INSERT INTO user(username, password, blog_name) VALUES(?, ?, ?)", (request.form['username'], request.form['password'], request.form['display']))
+        except sqlite3.IntegrityError:
+            return render_template("register.html", taken=True)
+        db.commit()
+        db.close()
+        return redirect("/")
+    else:
+        return render_template("register.html", taken=False)
 
 if __name__ == "__main__":
     app.debug = True
