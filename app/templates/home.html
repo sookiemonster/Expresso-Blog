@@ -7,17 +7,22 @@
         <link rel="stylesheet" href="../static/css/style.css">
     </head>
     <body>
-        <form action="/auth", method="POST">
-            <label for="username">Username</label>
-            <input type="text" name="username">
-            <br>
-            <label for="password">Password</label>
-            <input type="text" name="password">
-            <br>
-            <input type="submit" value="login" />
-        </form>
-        <form action="/register", method="GET">
-            <input type="submit" value="make account">
-        </form>
+        <datalist>{{logged}}</datalist>
+        {% if logged == false %}
+            <form action="/auth", method="POST">
+                <label for="username">Username</label>
+                <input type="text" name="username">
+                <br>
+                <label for="password">Password</label>
+                <input type="text" name="password">
+                <br>
+                <input type="submit" value="login" />
+            </form>
+            <form action="/register", method="GET">
+                <input type="submit" value="make account">
+            </form>
+        {% else %}
+            <h2>You have successfully logged in</h2>
+        {% endif %}
     </body>
 </html>

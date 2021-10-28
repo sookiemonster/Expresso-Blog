@@ -2,25 +2,13 @@ from flask import Flask, render_template, request, session, redirect
 import sqlite3
 
 app = Flask(__name__)
-
 @app.route("/", methods=["GET"])
-def index():
-    '''
-    db = sqlite3.connect("users.db")
-    c = db.cursor()
-    if 'username' in session.keys() and 'password' in session.keys():
-        c.execute("SELECT * FROM USER WHERE username=? AND password=?", (session['username'], session['password']))
-        user = c.fetchone()
-        if user != None:
-            print("It got here")
-            #only if the code was right will we send them to success.html
-            return render_template("success.html", 
-                username = session['username'], 
-                password = session['password'])
-                '''
-    
-        
-    return render_template("home.html")
+def login():
+    return render_template("home.html", logged=False)
+
+@app.route("/<id>/<username>/<password>", methods=["GET"])
+def index(id, username, password):
+    return render_template("home.html", logged=True)
     
 @app.route("/auth", methods=["GET", "POST"])
 def auth():
@@ -29,7 +17,7 @@ def auth():
     c.execute("SELECT * FROM USER WHERE username=? AND password=?", (request.form['username'], request.form['password']))
     user = c.fetchone()
     if user != None:
-        return redirect("/")
+        return redirect("/<{id}>/<{username}>/<{password}>".format(id=user[0], username=user[1], password=user[2]))
     return render_template("error.html")
 
 @app.route("/register", methods=["GET", "POST"])

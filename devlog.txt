@@ -9,3 +9,6 @@ Update file structure to match design document. Add basic HTML structure to temp
 
 joshuaK -- 2021-10-28 19:00
 Added login and make account
+
+joshuaK -- 2021-10-28 16:45
+Edited login and make accounts to be more organized
