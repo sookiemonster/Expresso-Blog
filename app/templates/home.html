@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="../static/css/style.css">
     </head>
     <body>
-        <datalist>{{logged}} {{blogs}}</datalist>
+        <datalist>{{logged}} {{blogs}} {{id}} {{user}} {{passw}}</datalist>
         {% if logged == false %}
             <form action="/auth", method="POST">
                 <label for="username">Username</label>
@@ -25,6 +25,9 @@
             {% for items in blogs%}
                 <h1>{{loop.index}} {{items}}</h1>
             {% endfor %}
+            <form action = "/new_entry/{{id}}/{{user}}/{{passw}}" method="GET">
+                <input type="submit" value="create new entry">
+            </form>
         {% endif %}
     </body>
 </html>
