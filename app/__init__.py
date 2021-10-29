@@ -10,10 +10,12 @@ def login():
 @app.route("/<id>/<username>/<password>", methods=["GET"])
 def index(id, username, password):
     files = []
-    for filename in os.scandir("./blogs/{id}".format(id=id)):
-        if filename.is_file():
-            file = open(filename.path)
-            files.append(file.read())
+    db = sqlite3.connect("users.db")
+    c = db.cursor()
+    c.execute("SELECT last_post_number FROM user WHERE id = ?", (id,))
+    for filename in range(c.fetchone()[0] + 1):
+        file = open("./blogs/{id}/{filename}.txt".format(id=id, filename=filename))
+        files.append(file.read())
     return render_template("home.html", logged=True, blogs=files, user=username, id=id, passw=password)
     
 @app.route("/auth", methods=["GET", "POST"])

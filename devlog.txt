@@ -18,3 +18,6 @@ Added file structure for storing blogs as well as view blogs
 
 joshuaK -- 2021-10-28 22:18
 can now make blogs
+
+joshuaK -- 2021-10-28 23:34
+Edited so blogs printed in right order
