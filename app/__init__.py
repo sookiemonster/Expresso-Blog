@@ -23,7 +23,7 @@ def auth():
     c.execute("SELECT * FROM USER WHERE username=? AND password=?", (request.form['username'], request.form['password']))
     user = c.fetchone()
     if user != None:
-        return redirect("/<{id}>/<{username}>/<{password}>".format(id=user[0], username=user[1], password=user[2]))
+        return redirect("/{id}/{username}/{password}".format(id=user[0], username=user[1], password=user[2]))
     return render_template("error.html", msg=1)
 
 @app.route("/logout")
@@ -39,7 +39,7 @@ def make():
             c.execute("INSERT INTO user(username, password, blog_name, last_post_number) VALUES(?, ?, ?, ?)", (request.form['username'], request.form['password'], request.form['display'], -1))
             c.execute("SELECT * FROM USER WHERE username=? AND password=?", (request.form['username'], request.form['password']))
             user = c.fetchone()
-            os.mkdir("./blogs/<{id}>".format(id=user[0]))
+            os.mkdir("./blogs/{id}".format(id=user[0]))
         except sqlite3.IntegrityError:
             return render_template("register.html", taken=True)
         db.commit()
