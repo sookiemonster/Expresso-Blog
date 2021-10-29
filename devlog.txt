@@ -21,3 +21,7 @@ can now make blogs
 
 joshuaK -- 2021-10-28 23:34
 Edited so blogs printed in right order
+
+danielS -- 2021-10-29 9:24
+Update __init__.py to create USERS table when it doesn't exist. 
+Updated page routing for login / register & removed display name.
