@@ -7,7 +7,6 @@
         <link rel="stylesheet" href="../static/css/style.css">
     </head>
     <body>
-        <datalist>{{logged}} {{blogs}} {{id}} {{user}} {{passw}}</datalist>
         {% if logged == false %}
             <form action="/auth", method="POST">
                 <label for="username">Username</label>

@@ -5,7 +5,7 @@ import sqlite3
 app = Flask(__name__)
 @app.route("/", methods=["GET"])
 def login():
-    return render_template("home.html", logged=False, blogs=[], user="", id=0, passw="")
+    return render_template("login.html", logged=False, blogs=[], user="", id=0, passw="")
 
 @app.route("/<id>/<username>/<password>", methods=["GET"])
 def index(id, username, password):
@@ -56,11 +56,28 @@ def make():
     if request.method == "POST":
         db = sqlite3.connect("users.db")
         c = db.cursor()
+
+        make_user_table = ("""CREATE TABLE IF NOT EXISTS USERS(
+            UID INTEGER PRIMARY KEY NOT NULL,
+            USERNAME TEXT NOT NULL,
+            PASSWORD TEXT NOT NULL,
+            BLOG_NAME TEXT
+            LAST_POST_NUM INTEGER, 
+            UNIQUE (USERNAME));""")
+            
+        c.execute(make_user_table)
+
         try:
-            c.execute("INSERT INTO user(username, password, blog_name, last_post_number) VALUES(?, ?, ?, ?)", (request.form['username'], request.form['password'], request.form['display'], -1))
-            c.execute("SELECT * FROM USER WHERE username=? AND password=?", (request.form['username'], request.form['password']))
-            user = c.fetchone()
-            os.mkdir("./blogs/{id}".format(id=user[0]))
+            # Add user credentials to database
+            c.execute("INSERT INTO USERS(USERNAME, PASSWORD) VALUES(?, ?)", 
+                (request.form['username'], request.form['password']))
+            
+            # Select newly created user
+            c.execute("SELECT * FROM USER WHERE USERNAME=? AND PASSWORD=?", 
+                (request.form['username'], request.form['password']))
+
+            new_user = c.fetchone()
+            os.mkdir("./blogs/%s" % (new_user[0])) # Create a blog directory to store new user's files
         except sqlite3.IntegrityError:
             return render_template("register.html", taken=True)
         db.commit()
