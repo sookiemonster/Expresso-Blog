@@ -12,3 +12,6 @@ Added login and make account
 
 joshuaK -- 2021-10-28 16:45
 Edited login and make accounts to be more organized
+
+joshuaK -- 2021-10-28 20:08
+Added file structure for storing blogs as well as view blogs

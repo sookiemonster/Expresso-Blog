@@ -7,5 +7,9 @@
         <link rel="stylesheet" href="../static/css/style.css">
     </head>
     <body>
+        <datalist>{{msg}}</datalist>
+        {% if msg == 1 %}
+            <h1>That username is already taken</h1>
+        {% endif %}
     </body>
 </html>
