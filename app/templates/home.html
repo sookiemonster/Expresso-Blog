@@ -7,8 +7,8 @@
         <link rel="stylesheet" href="../static/css/style.css">
     </head>
     <body>
-        {% for items in blogs%}
-            <h1>{{loop.index}} {{items}}</h1>
+        {% for items in blogs %}
+            <h1>{{items}}</h1>
             <form action="/edit/{{loop.index - 1}}" method="GET">
                 <input type="submit" value=edit_entry>
             </form>
