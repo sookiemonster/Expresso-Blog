@@ -1,8 +1,7 @@
 from flask import Flask, render_template, request, session, redirect
 import os, sqlite3
 
-# FILE & TABLES
-USER_TABLE = "USERS"
+# FILENAMES
 DB_FILE = "users.db"
 
 # DB ROW INDEXING
@@ -27,20 +26,20 @@ def auth():
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
 
-    make_user_table = """CREATE TABLE IF NOT EXISTS %s(
+    make_user_table = """CREATE TABLE IF NOT EXISTS USERS(
                 UID INTEGER PRIMARY KEY NOT NULL,
                 USERNAME TEXT NOT NULL,
                 PASSWORD TEXT NOT NULL,
                 BLOG_NAME TEXT
                 LAST_POST_NUM INTEGER, 
-                UNIQUE (USERNAME));""" % (USER_TABLE)
+                UNIQUE (USERNAME));"""
                 
     c.execute(make_user_table)
     
     client_username = request.form['username']
     client_password = request.form['password']
 
-    c.execute("SELECT * FROM %s WHERE username=? AND password=?" % (USER_TABLE), (client_username, client_password))
+    c.execute("SELECT * FROM USERS WHERE username=? AND password=?", (client_username, client_password))
     user_info = c.fetchone()
     
     if user_info != None:
@@ -63,16 +62,16 @@ def user_blog():
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
 
-        get_UID = "SELECT UID FROM %s WHERE USERNAME = %s" % (USER_TABLE, session['username'])
+        get_UID = "SELECT UID FROM USERS WHERE USERNAME = ?", (session['username'])
         c.execute(get_UID)
         uid = c.fetchone()
 
-        get_last_post_num = "SELECT LAST_POST_NUM FROM %s WHERE id = %s" % (USER_TABLE, uid)
+        get_last_post_num = "SELECT LAST_POST_NUM FROM USERS WHERE id = ?", (uid)
         c.execute(get_last_post_num)
         last_post_num = c.fetchone()
 
         for post_num in range(last_post_num, -1, -1): # Descend from the last post to 0
-            post = open("./blogs/%s/%s.txt".format(uid, post_num))
+            post = open("./blogs/%s/%s.txt" % (uid, post_num))
             files.append(post.read())
 
         return render_template("home.html", blogs=files)
@@ -86,18 +85,18 @@ def new_entry():
             db = sqlite3.connect(DB_FILE)
             c = db.cursor()
 
-            get_UID = "SELECT UID FROM ? WHERE USERNAME = ?", (USER_TABLE, session['username'])
+            get_UID = "SELECT UID FROM USERS WHERE USERNAME = ?", (session['username'])
             c.execute(get_UID)
             uid = c.fetchone()
 
-            get_last_post_num = "SELECT LAST_POST_NUM FROM ? WHERE UID = ?", (USER_TABLE, uid)
+            get_last_post_num = "SELECT LAST_POST_NUM FROM USERS WHERE UID = ?", (uid)
             c.execute(get_last_post_num)
             last_post_num = c.fetchone()
 
             new_post_route = "./blogs/%s/%s.txt" % (uid, last_post_num)
             file = open(new_post_route, "w")
 
-            c.execute("UPDATE %s SET LAST_POST_NUM=LAST_POST_NUM+1 WHERE UID = ?" % (USER_TABLE, uid))
+            c.execute("UPDATE USERS SET LAST_POST_NUM=LAST_POST_NUM+1 WHERE UID = ?", (uid))
             file.write(request.form['new_entry'])
             file.close()
             db.commit()
@@ -118,13 +117,13 @@ def register():
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
 
-        make_user_table = """CREATE TABLE IF NOT EXISTS %s(
+        make_user_table = """CREATE TABLE IF NOT EXISTS USERS(
             UID INTEGER PRIMARY KEY NOT NULL,
             USERNAME TEXT NOT NULL,
             PASSWORD TEXT NOT NULL,
             BLOG_NAME TEXT
             LAST_POST_NUM INTEGER, 
-            UNIQUE (USERNAME));""" % (USER_TABLE)
+            UNIQUE (USERNAME));"""
             
         c.execute(make_user_table)
 
@@ -132,11 +131,11 @@ def register():
 
         try:
             # Add user credentials to database
-            c.execute("INSERT INTO %s(USERNAME, PASSWORD) VALUES(?, ?)" % (USER_TABLE), 
+            c.execute("INSERT INTO USERS(USERNAME, PASSWORD) VALUES(?, ?)", 
                 (client_username, client_password))
             
             # Select newly created user
-            c.execute("SELECT * FROM %s WHERE USERNAME=? AND PASSWORD=?" % (USER_TABLE), 
+            c.execute("SELECT * FROM USERS WHERE USERNAME=? AND PASSWORD=?", 
                 (client_username, client_password))
 
             new_user = c.fetchone()
@@ -156,16 +155,16 @@ def edit(post_num):
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
 
-        get_UID = "SELECT UID FROM %s WHERE USERNAME = ?" % (USER_TABLE), (session['username'])
+        get_UID = "SELECT UID FROM USERS WHERE USERNAME = ?", (session['username'])
         c.execute(get_UID)
         uid = c.fetchone()
 
-        get_last_post_num = "SELECT LAST_POST_NUM FROM %s WHERE UID = ?" % (USER_TABLE), (uid)
+        get_last_post_num = "SELECT LAST_POST_NUM FROM USERS WHERE UID = ?", (uid)
         c.execute(get_last_post_num)
         last_post_num = c.fetchone()
 
         if request.method == "POST":
-            file = open("./blogs/%s/%s.txt".format(uid, post_num), "w")
+            file = open("./blogs/%s/%s.txt" % (uid, post_num), "w")
             file.write(request.form['edit'])
             return redirect('/')
         else:
