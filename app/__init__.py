@@ -1,9 +1,14 @@
 from flask import Flask, render_template, request, session, redirect
 import os, sqlite3
 
-# DEFINE CONSTANTS
+# FILE & TABLES
 USER_TABLE = "USERS"
 DB_FILE = "users.db"
+
+# DB ROW INDEXING
+UID = 0
+USERNAME = 1
+LAST_POST_NUM = 2
 
 app = Flask(__name__)
 app.secret_key = os.urandom(32)
@@ -36,10 +41,10 @@ def auth():
     client_password = request.form['password']
 
     c.execute("SELECT * FROM %s WHERE username=? AND password=?" % (USER_TABLE), (client_username, client_password))
-    user = c.fetchone()
+    user_info = c.fetchone()
     
-    if user != None:
-        session['username'] = user[1]
+    if user_info != None:
+        session['username'] = user_info[USERNAME]
         db.close()
         return redirect("/")
     db.close()
@@ -81,18 +86,18 @@ def new_entry():
             db = sqlite3.connect(DB_FILE)
             c = db.cursor()
 
-            get_UID = "SELECT UID FROM %s WHERE USERNAME = %s" % (USER_TABLE, session['username'])
+            get_UID = "SELECT UID FROM ? WHERE USERNAME = ?", (USER_TABLE, session['username'])
             c.execute(get_UID)
             uid = c.fetchone()
 
-            get_last_post_num = "SELECT LAST_POST_NUM FROM %s WHERE id = %s" % (USER_TABLE, uid)
+            get_last_post_num = "SELECT LAST_POST_NUM FROM ? WHERE UID = ?", (USER_TABLE, uid)
             c.execute(get_last_post_num)
             last_post_num = c.fetchone()
 
             new_post_route = "./blogs/%s/%s.txt" % (uid, last_post_num)
             file = open(new_post_route, "w")
 
-            c.execute("UPDATE %s SET LAST_POST_NUM=LAST_POST_NUM+1 WHERE UID=%s" % (USER_TABLE, uid))
+            c.execute("UPDATE %s SET LAST_POST_NUM=LAST_POST_NUM+1 WHERE UID = ?" % (USER_TABLE, uid))
             file.write(request.form['new_entry'])
             file.close()
             db.commit()
@@ -151,11 +156,11 @@ def edit(post_num):
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
 
-        get_UID = "SELECT UID FROM %s WHERE USERNAME = %s" % (USER_TABLE, session['username'])
+        get_UID = "SELECT UID FROM %s WHERE USERNAME = ?" % (USER_TABLE), (session['username'])
         c.execute(get_UID)
         uid = c.fetchone()
 
-        get_last_post_num = "SELECT LAST_POST_NUM FROM %s WHERE UID = %s" % (USER_TABLE, uid)
+        get_last_post_num = "SELECT LAST_POST_NUM FROM %s WHERE UID = ?" % (USER_TABLE), (uid)
         c.execute(get_last_post_num)
         last_post_num = c.fetchone()
 
