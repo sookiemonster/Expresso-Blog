@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Expresso</title>
+        <link rel="icon" type="image/x-icon" href="../static/images/favicon.ico">
+
+        <link rel="stylesheet" href="../static/css/style.css">
+    </head>
+    <body>
+            {% for items in blogs%}
+                <h1>{{loop.index}} {{items}}</h1>
+            {% endfor %}
+            <form action="/logout", method="GET">
+                <input type="submit" value="logout">
+            </form>
+    </body>
+</html>

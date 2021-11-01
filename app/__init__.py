@@ -23,14 +23,14 @@ def login():
                 USERNAME TEXT NOT NULL,
                 PASSWORD TEXT NOT NULL,
                 BLOG_NAME TEXT,
-                LAST_POST_NUM INTEGER, 
+                LAST_POST_NUM INTEGER,
                 UNIQUE (USERNAME));""")
-                
+
         c.execute(make_user_table)
         db.commit()
         db.close()
         return render_template("login.html", logged=False, blogs=[], user="", id=0, passw="")
-    
+
 @app.route("/auth", methods=["GET", "POST"])
 def auth():
     db = sqlite3.connect("users.db")
@@ -75,11 +75,11 @@ def make():
         c = db.cursor()
         try:
             # Add user credentials to database
-            c.execute("INSERT INTO USERS(USERNAME, PASSWORD, LAST_POST_NUM) VALUES(?, ?, ?)", 
+            c.execute("INSERT INTO USERS(USERNAME, PASSWORD, LAST_POST_NUM) VALUES(?, ?, ?)",
                 (request.form['username'], request.form['password'], -1))
-            
+
             # Select newly created user
-            c.execute("SELECT * FROM USERS WHERE USERNAME=? AND PASSWORD=?", 
+            c.execute("SELECT * FROM USERS WHERE USERNAME=? AND PASSWORD=?",
                 (request.form['username'], request.form['password']))
 
             new_user = c.fetchone()
@@ -104,6 +104,22 @@ def edit(index):
     else:
         file = open("./blogs/{id}/{index}.txt".format(id = session['UID'], index=user[0] - index), "r")
         return render_template("edit.html", text=file.read(), index=index)
+@app.route("/view")
+def view():
+    directories = []
+    for dir in os.scandir("./blogs/"):
+        directories.append(dir)
+    return render_template("view.html", items=directories)
+@app.route("/view/<int:UID>")
+def viewid(UID):
+    files = []
+    db = sqlite3.connect("users.db")
+    c = db.cursor()
+    c.execute("SELECT LAST_POST_NUM FROM USERS WHERE UID = ?", (session['UID'],))
+    for filename in range(c.fetchone()[0], -1, -1):
+        file = open("./blogs/{id}/{filename}.txt".format(id=session['UID'], filename=filename))
+        files.append(file.read())
+    return render_template("look.html", items=files)
 
 if __name__ == "__main__":
     app.debug = True
