@@ -29,3 +29,6 @@ Updated page routing for login / register & removed display name.
 joshuaK -- 2021-10-31 20:32
 Fixed changes done in previous commit(2021-10-29 9:24) so website runs
 Added logout and edit
+
+danielS -- 2021-11-1 9:05
+Updated requirements.txt.
