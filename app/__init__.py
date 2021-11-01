@@ -24,14 +24,14 @@ def user_blog():
 
         get_UID = "SELECT UID FROM %s WHERE USERNAME = %s" % (USER_TABLE, session['username'])
         c.execute(get_UID)
-        id = c.fetchone()
+        uid = c.fetchone()
 
-        get_last_post_num = "SELECT LAST_POST_NUM FROM %s WHERE id = %s" % (USER_TABLE, id)
+        get_last_post_num = "SELECT LAST_POST_NUM FROM %s WHERE id = %s" % (USER_TABLE, uid)
         c.execute(get_last_post_num)
         last_post_num = c.fetchone()
 
         for post_num in range(last_post_num, -1, -1): # Descend from the last post to 0
-            post = open("./blogs/%s/%s.txt".format(id, post_num))
+            post = open("./blogs/%s/%s.txt".format(uid, post_num))
             files.append(post.read())
 
         return render_template("home.html", blogs=files)
@@ -46,7 +46,7 @@ def auth():
     client_username = request.form['username']
     client_password = request.form['password']
 
-    c.execute("SELECT * FROM USER WHERE username=? AND password=?", (client_username, client_password))
+    c.execute("SELECT * FROM %s WHERE username=? AND password=?", (USER_TABLE, client_username, client_password))
     user = c.fetchone()
 
     if user != None:
@@ -64,16 +64,26 @@ def logout():
 @app.route("/new_entry", methods=["POST", "GET"])
 def new_entry():
     if request.method == "POST":
-        db = sqlite3.connect("users.db")
+        db = sqlite3.connect(DB_FILE)
         c = db.cursor()
-        c.execute("SELECT LAST_POST_NUM FROM USERS WHERE UID = ?", (session['UID'],))
-        file = open("./blogs/{id}/{text}.txt".format(id=session['UID'], text=(c.fetchone()[0] + 1)), "w")
-        c.execute("UPDATE USERS SET LAST_POST_NUM=LAST_POST_NUM+1 WHERE UID=?", (session['UID'],))
+
+        get_UID = "SELECT UID FROM %s WHERE USERNAME = %s" % (USER_TABLE, session['username'])
+        c.execute(get_UID)
+        uid = c.fetchone()
+
+        get_last_post_num = "SELECT LAST_POST_NUM FROM %s WHERE id = %s" % (USER_TABLE, uid)
+        c.execute(get_last_post_num)
+        last_post_num = c.fetchone()
+
+        new_post_route = "./blogs/%s/%s.txt" % (uid, last_post_num)
+        file = open(new_post_route, "w")
+
+        c.execute("UPDATE %s SET LAST_POST_NUM=LAST_POST_NUM+1 WHERE UID=%s" % (USER_TABLE, uid))
         file.write(request.form['new_entry'])
         file.close()
         db.commit()
         db.close()
-        return redirect("/")
+        return redirect("/my_blog")
     else:
         return render_template("new_entry.html")
 
@@ -84,16 +94,16 @@ def make():
         client_username = request.form['username']
         client_password = request.form['password']
 
-        db = sqlite3.connect("users.db")
+        db = sqlite3.connect(DB_FILE)
         c = db.cursor()
 
-        make_user_table = ("""CREATE TABLE IF NOT EXISTS USERS(
+        make_user_table = """CREATE TABLE IF NOT EXISTS %s(
             UID INTEGER PRIMARY KEY NOT NULL,
             USERNAME TEXT NOT NULL,
             PASSWORD TEXT NOT NULL,
             BLOG_NAME TEXT
             LAST_POST_NUM INTEGER, 
-            UNIQUE (USERNAME));""")
+            UNIQUE (USERNAME));""" % (USER_TABLE)
             
         c.execute(make_user_table)
 
@@ -117,19 +127,30 @@ def make():
         return redirect("/")
     else:
         return render_template("register.html", taken=False)
-@app.route("/edit/<int:index>", methods=["GET", "POST"])
-def edit(index):
-    db = sqlite3.connect("users.db")
-    c = db.cursor()
-    c.execute("SELECT LAST_POST_NUM FROM USERS WHERE UID=?", (session['UID'],))
-    user = c.fetchone()
-    if request.method == "POST":
-        file = open("./blogs/{id}/{index}.txt".format(id = session['UID'], index=user[0] - index), "w")
-        file.write(request.form['edit'])
-        return redirect('/')
+
+@app.route("/edit/<int:post_num>", methods=["GET", "POST"])
+def edit(post_num):
+    if (session['username']):
+        db = sqlite3.connect(DB_FILE)
+        c = db.cursor()
+
+        get_UID = "SELECT UID FROM %s WHERE USERNAME = %s" % (USER_TABLE, session['username'])
+        c.execute(get_UID)
+        uid = c.fetchone()
+
+        get_last_post_num = "SELECT LAST_POST_NUM FROM %s WHERE id = %s" % (USER_TABLE, uid)
+        c.execute(get_last_post_num)
+        last_post_num = c.fetchone()
+
+        if request.method == "POST":
+            file = open("./blogs/%s/%s.txt".format(uid, post_num), "w")
+            file.write(request.form['edit'])
+            return redirect('/')
+        else:
+            file = open("./blogs/%s/%s.txt" % (uid, post_num), "r")
+            return render_template("edit.html", text=file.read(), index=post_num)
     else:
-        file = open("./blogs/{id}/{index}.txt".format(id = session['UID'], index=user[0] - index), "r")
-        return render_template("edit.html", text=file.read(), index=index)
+        redirect("/")
 
 if __name__ == "__main__":
     app.debug = True
