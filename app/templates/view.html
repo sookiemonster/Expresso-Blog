@@ -9,12 +9,15 @@
     <body>
             {% for items in blogs%}
                 <h1>{{loop.index}} {{items}}</h1>
-                <form action="/view/{{loop.index}}" method="GET">
+                <form action="/view/{{items}}" method="GET">
                     <input type="submit" value="view user">
                 </form>
             {% endfor %}
             <form action="/logout", method="GET">
                 <input type="submit" value="logout">
+            </form>
+            <form action="/", method="GET">
+                <input type="submit" value="return">
             </form>
     </body>
 </html>

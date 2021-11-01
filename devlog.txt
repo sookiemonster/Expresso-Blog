@@ -33,3 +33,7 @@ Added logout and edit
 danielS -- 2021-11-1 9:05
 Updated requirements.txt.
 Updated README & launch codes.
+
+joshuaK -- 2021-11-1 7:18
+Added view other blogs
+Added another error message as well as redirecting the user to login if they have not logged in yet
