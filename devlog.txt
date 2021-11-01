@@ -25,3 +25,7 @@ Edited so blogs printed in right order
 danielS -- 2021-10-29 9:24
 Update __init__.py to create USERS table when it doesn't exist. 
 Updated page routing for login / register & removed display name.
+
+joshuaK -- 2021-10-31 20:32
+Fixed changes done in previous commit(2021-10-29 9:24) so website runs
+Added logout and editSS

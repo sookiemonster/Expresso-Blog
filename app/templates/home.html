@@ -23,9 +23,15 @@
         {% else %}
             {% for items in blogs%}
                 <h1>{{loop.index}} {{items}}</h1>
+                <form action="/edit/{{loop.index - 1}}" method="GET">
+                    <input type="submit" value=edit_entry>
+                </form>
             {% endfor %}
-            <form action = "/new_entry/{{id}}/{{user}}/{{passw}}" method="GET">
+            <form action = "/new_entry" method="GET">
                 <input type="submit" value="create new entry">
+            </form>
+            <form action="/logout", method="GET">
+                <input type="submit" value="logout">
             </form>
         {% endif %}
     </body>
