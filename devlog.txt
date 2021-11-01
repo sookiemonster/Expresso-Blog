@@ -32,3 +32,4 @@ Added logout and edit
 
 danielS -- 2021-11-1 9:05
 Updated requirements.txt.
+Updated README & launch codes.
