@@ -13,7 +13,18 @@ app = Flask(__name__)
 app.secret_key = os.urandom(32)
 
 def is_logged_in():
-    return bool(session.get('username')) == True
+    """Returns whether a user is logged in or not."""
+    return bool(session.get('id')) == True
+
+def get_username(cursor, user_id): 
+    """Returns the username of a given user_id"""
+    cursor.execute("SELECT USERNAME FROM USERS WHERE UID = ?", (user_id,)) # Comma is needed after user_id (creates a single element tuple)
+    return cursor.fetchone()
+
+def get_last_post_num(cursor, user_id):
+    """Returns the last post number of a given user_id"""
+    cursor.execute("SELECT LAST_POST_NUM FROM USERS WHERE UID = ?", (user_id,)) # Comma is needed after user_id (creates a single element tuple)
+    return cursor.fetchone()
 
 @app.route("/", methods=["GET"])
 def home():
@@ -43,7 +54,7 @@ def auth():
     user_info = c.fetchone()
     
     if user_info != None:
-        session['username'] = user_info[USERNAME]
+        session['id'] = user_info[UID]
         db.close()
         return redirect("/")
     db.close()
@@ -52,31 +63,25 @@ def auth():
 @app.route("/logout")
 def logout():
     session.clear()
-    return redirect("/")
+    return redirect("/") 
 
 @app.route("/my_blog", methods=["GET"])
 def user_blog():
     # Retrieve & render user's blog if they are logged in
     if is_logged_in():
-        files = []
+        posts = []
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
 
-        get_UID = "SELECT UID FROM USERS WHERE USERNAME = ?", (session['username'])
-        c.execute(get_UID)
-        uid = c.fetchone()
-
-        get_last_post_num = "SELECT LAST_POST_NUM FROM USERS WHERE id = ?", (uid)
-        c.execute(get_last_post_num)
-        last_post_num = c.fetchone()
+        last_post_num = get_last_post_num(c, session['id'])
 
         for post_num in range(last_post_num, -1, -1): # Descend from the last post to 0
-            post = open("./blogs/%s/%s.txt" % (uid, post_num))
-            files.append(post.read())
+            post = open("./blogs/%s/%s.txt" % ((session['id']), post_num))
+            posts.append(post.read()) # Append each subsequent entry to posts
 
-        return render_template("home.html", blogs=files)
+        return render_template("home.html", blogs=posts)
     else:
-        return redirect("/")
+        return redirect("/") # Redirect user to login if they aren't logged in
     
 @app.route("/new_entry", methods=["POST", "GET"])
 def new_entry():
@@ -85,18 +90,12 @@ def new_entry():
             db = sqlite3.connect(DB_FILE)
             c = db.cursor()
 
-            get_UID = "SELECT UID FROM USERS WHERE USERNAME = ?", (session['username'])
-            c.execute(get_UID)
-            uid = c.fetchone()
+            last_post_num = get_last_post_num(c, session['id'])
 
-            get_last_post_num = "SELECT LAST_POST_NUM FROM USERS WHERE UID = ?", (uid)
-            c.execute(get_last_post_num)
-            last_post_num = c.fetchone()
-
-            new_post_route = "./blogs/%s/%s.txt" % (uid, last_post_num)
+            new_post_route = "./blogs/%s/%s.txt" % (session['id'], last_post_num)
             file = open(new_post_route, "w")
 
-            c.execute("UPDATE USERS SET LAST_POST_NUM=LAST_POST_NUM+1 WHERE UID = ?", (uid))
+            c.execute("UPDATE USERS SET LAST_POST_NUM=LAST_POST_NUM+1 WHERE UID = ?", (session['id']))
             file.write(request.form['new_entry'])
             file.close()
             db.commit()
@@ -105,7 +104,7 @@ def new_entry():
         else:
             return render_template("new_entry.html")
     else:
-        return redirect("/")
+        return redirect("/") # Redirect user to login if they aren't logged in
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -126,8 +125,6 @@ def register():
             UNIQUE (USERNAME));"""
             
         c.execute(make_user_table)
-
-        # list_users = 
 
         try:
             # Add user credentials to database
@@ -155,14 +152,8 @@ def edit(post_num):
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
 
-        get_UID = "SELECT UID FROM USERS WHERE USERNAME = ?", (session['username'])
-        c.execute(get_UID)
-        uid = c.fetchone()
-
-        get_last_post_num = "SELECT LAST_POST_NUM FROM USERS WHERE UID = ?", (uid)
-        c.execute(get_last_post_num)
-        last_post_num = c.fetchone()
-
+        last_post_num = get_last_post_num(c, session['id'])
+        
         if request.method == "POST":
             file = open("./blogs/%s/%s.txt" % (uid, post_num), "w")
             file.write(request.form['edit'])
@@ -171,7 +162,7 @@ def edit(post_num):
             file = open("./blogs/%s/%s.txt" % (uid, post_num), "r")
             return render_template("edit.html", text=file.read(), index=post_num)
     else:
-        redirect("/")
+        redirect("/") # Redirect user to login if they aren't logged in
 
 if __name__ == "__main__":
     app.debug = True
