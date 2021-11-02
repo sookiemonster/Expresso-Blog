@@ -36,8 +36,10 @@ def auth():
     if (request.method == "POST"):
         db = sqlite3.connect("users.db")
         c = db.cursor()
+        #select the user that matches the inputed username and password
         c.execute("SELECT * FROM USERS WHERE USERNAME=? AND PASSWORD=?", (request.form['username'], request.form['password']))
         user = c.fetchone()
+        #if a user was selected add the user the the session and return home
         if user != None:
             session['UID'] = user[0]
             session['username'] = user[1]
@@ -50,6 +52,7 @@ def auth():
 
 @app.route("/logout")
 def logout():
+    #clears session and returns home
     session.clear()
     return redirect("/")
 
@@ -102,6 +105,7 @@ def edit(index):
         db = sqlite3.connect("users.db")
         c = db.cursor()
         c.execute("SELECT LAST_POST_NUM FROM USERS WHERE UID=?", (session['UID'],))
+        #select last_post_num so index can be used as offset from last
         user = c.fetchone()
         if request.method == "POST":
             file = open("./blogs/{id}/{index}.txt".format(id = session['UID'], index=user[0] - index), "w")
