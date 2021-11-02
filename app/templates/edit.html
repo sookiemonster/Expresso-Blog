@@ -7,9 +7,9 @@
         <link rel="stylesheet" href="../static/css/style.css">
     </head>
     <body>
-        <form action="/new_entry" method="POST">
-            <label for="new_entry">new_entry</label>
-            <input type="text" name="new_entry">
+        <form action="/edit/{{index}}" method="POST">
+            <label for="edit">edit</label>
+            <input type="text" name="edit" value="{{text}}">
             <input type="submit" value="submit new entry">
         </form>
     </body>

@@ -19,5 +19,24 @@ Added file structure for storing blogs as well as view blogs
 joshuaK -- 2021-10-28 22:18
 can now make blogs
 
+joshuaK -- 2021-10-28 23:34
+Edited so blogs printed in right order
+
+danielS -- 2021-10-29 9:24
+Update __init__.py to create USERS table when it doesn't exist. 
+Updated page routing for login / register & removed display name.
+
+joshuaK -- 2021-10-31 20:32
+Fixed changes done in previous commit(2021-10-29 9:24) so website runs
+Added logout and edit
+
+danielS -- 2021-11-1 9:05
+Updated requirements.txt.
+Updated README & launch codes.
+
+joshuaK -- 2021-11-1 7:18
+Added view other blogs
+Added another error message as well as redirecting the user to login if they have not logged in yet
+
 danielS -- 20201-11-1 23:24
 Update design_wiki pdf. Added front-end design layouts.

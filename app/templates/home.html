@@ -3,11 +3,10 @@
     <head>
         <title>Expresso</title>
         <link rel="icon" type="image/x-icon" href="../static/images/favicon.ico">
-        
+
         <link rel="stylesheet" href="../static/css/style.css">
     </head>
     <body>
-        <datalist>{{logged}} {{blogs}} {{id}} {{user}} {{passw}}</datalist>
         {% if logged == false %}
             <form action="/auth", method="POST">
                 <label for="username">Username</label>
@@ -24,9 +23,18 @@
         {% else %}
             {% for items in blogs%}
                 <h1>{{loop.index}} {{items}}</h1>
+                <form action="/edit/{{loop.index - 1}}" method="GET">
+                    <input type="submit" value=edit_entry>
+                </form>
             {% endfor %}
-            <form action = "/new_entry/{{id}}/{{user}}/{{passw}}" method="GET">
+            <form action = "/new_entry" method="GET">
                 <input type="submit" value="create new entry">
+            </form>
+            <form action="/logout", method="GET">
+                <input type="submit" value="logout">
+            </form>
+            <form action="/view", method="GET">
+                <input type="submit" value="view other people's blogs">
             </form>
         {% endif %}
     </body>

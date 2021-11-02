@@ -10,6 +10,11 @@
         <datalist>{{msg}}</datalist>
         {% if msg == 1 %}
             <h1>That username is already taken</h1>
+        {% elif msg == 2%}
+            <h1>Incorrect username or password</h1>
+            <form action="/" method="GET">
+                <input type="submit" value="back to login">
+            </form>
         {% endif %}
     </body>
 </html>
