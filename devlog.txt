@@ -18,3 +18,6 @@ Added file structure for storing blogs as well as view blogs
 
 joshuaK -- 2021-10-28 22:18
 can now make blogs
+
+danielS -- 20201-11-1 23:24
+Update design_wiki pdf. Added front-end design layouts.
