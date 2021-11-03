@@ -41,5 +41,10 @@ Added another error message as well as redirecting the user to login if they hav
 danielS -- 2021-11-1 23:24
 Update design_wiki pdf. Added front-end design layouts.
 
+joshuaK -- 2021-11-3 8:59
+Updated code so that /register logs in the user
+
 danielS -- 2021-11-3 9:14
 Update login styling.
+
+
