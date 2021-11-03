@@ -6,13 +6,21 @@ app = Flask(__name__)
 app.secret_key = os.urandom(32)
 @app.route("/", methods=["GET"])
 def login():
+    if not os.path.exists("./blogs"):
+        os.mkdir("./blogs")
     if 'username' in session.keys():
         files = []
         db = sqlite3.connect("users.db")
         c = db.cursor()
         c.execute("SELECT LAST_POST_NUM FROM USERS WHERE UID = ?", (session['UID'],))
         for filename in range(c.fetchone()[0], -1, -1):
-            file = open("./blogs/{id}/{filename}.txt".format(id=session['UID'], filename=filename))
+            if not os.path.exists("./blogs/{id}".format(id=session['UID'])):
+                os.mkdir("./blogs/{id}")
+            if os.path.exists("./blogs/{id}/{filename}.txt".format(id=session['UID'], filename=filename)):
+                file = open("./blogs/{id}/{filename}.txt".format(id=session['UID'], filename=filename))
+            else:
+                c.execute("UPDATE USERS SET LAST_POST_NUM=-1 WHERE UID=?", (session['UID'],))
+                break
             files.append(file.read())
         return render_template("home.html", logged=True, blogs=files)
     else:

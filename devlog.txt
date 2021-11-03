@@ -47,6 +47,8 @@ Updated code so that /register logs in the user
 danielS -- 2021-11-3 9:14
 Update login styling.
 
-danielS -- 2021-11-3-2021 13:13
+danielS -- 2021-11-3 13:13
 Update hover states and layout of login.html.
 
+joshuaK -- 2021-11-3 19:11
+Added error handling for home page
