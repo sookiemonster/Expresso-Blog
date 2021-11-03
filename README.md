@@ -5,7 +5,7 @@ Roster: Daniel Sooknanan, Sophie Liu, Joshua Kloepfer
 ```bash
 # Get repo
 git clone https://github.com/sookiemonster/Expresso-Blog.git
-cd Expresso-Blog
+cd Expresso-Blog/app
 ```
 
 <b>Highly suggested to run this in a virtual environment</b>
@@ -27,5 +27,5 @@ pip install -r requirements.txt
 
 Run
 ```bash
-flask run
+python3 __init__.py
 ```
