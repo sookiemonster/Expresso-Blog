@@ -1,16 +1,23 @@
 :root {
     --dark-brown: #3a2323;
+    --med-brown: #5a3737;
     --interact-blue: #2eceeb;
+    --interact-dark-blue: #17a1c4;
     --light-gray: #ececec;
-    --light-brown: #f7cfae;
+    --light-brown: #fadcc4;
     --white: #FFFFFF;
     --font: 'Open Sans', sans-serif;
+}
+
+html {
+    height: 100%;
 }
 
 body {
     padding: 0;
     margin: 0;
     font-family: var(--font);
+    height: 100%;
 }
 
 * {

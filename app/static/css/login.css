@@ -1,17 +1,26 @@
 :root {
-    --margin-dist: 15px
+    --margin-dist: 20px
 }
 
-html {
+.layout-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    align-items: center;
     height: 100%;
 }
 
 .login-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    gap: var(--margin-dist);
     align-items: center;
+    gap: var(--margin-dist);
+}
+
+/* INPUT STYLING */
+
+input {
+    font-family: inherit;
 }
 
 .credential-input {
@@ -24,10 +33,6 @@ html {
     
     background-color: var(--light-gray);
     border: none;
-}
-
-input {
-    font-family: var(--font);
 }
 
 #credential-submit {
@@ -45,14 +50,35 @@ input {
     text-transform: uppercase;
     font-weight: 600;
     font-size: 1rem;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
+
+    cursor: pointer;
+    transition: 
+        letter-spacing .15s ease-out,
+        width .15s ease-out,
+        background-color .15s ease-out;
 }
+
+#credential-submit:hover {
+    width: 80%;
+    letter-spacing: 7px;
+    background-color: var(--med-brown);
+}
+
+/* LINK STYLING */
 
 .prompt-register {
     font-weight: 300;
 }
 
 .link {
+    display: inline-block;
+    margin-top: 15%;
     font-weight: 400;
-    color: var(--interact-blue)
+    color: var(--interact-dark-blue);
+    transition: color .1s ease-out;
+}
+
+.link:hover {
+    color: var(--interact-blue);
 }
