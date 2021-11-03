@@ -1,0 +1,58 @@
+:root {
+    --margin-dist: 15px
+}
+
+html {
+    height: 100%;
+}
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--margin-dist);
+    align-items: center;
+}
+
+.credential-input {
+    display: block;
+    padding: 15px 20px;
+    margin: var(--margin-dist);
+
+    border-radius: 10px;
+    width: calc(200px + 5vw);
+    
+    background-color: var(--light-gray);
+    border: none;
+}
+
+input {
+    font-family: var(--font);
+}
+
+#credential-submit {
+    display: block;
+    width: 70%;
+    padding: 12px;
+    margin: 0 auto; /* Center on both sides */
+    
+    border: none;
+    border-radius: 20px;
+
+    background-color: var(--dark-brown);
+    color: var(--light-brown);
+
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 1px;
+}
+
+.prompt-register {
+    font-weight: 300;
+}
+
+.link {
+    font-weight: 400;
+    color: var(--interact-blue)
+}

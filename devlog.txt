@@ -38,5 +38,8 @@ joshuaK -- 2021-11-1 7:18
 Added view other blogs
 Added another error message as well as redirecting the user to login if they have not logged in yet
 
-danielS -- 20201-11-1 23:24
+danielS -- 2021-11-1 23:24
 Update design_wiki pdf. Added front-end design layouts.
+
+danielS -- 2021-11-3 9:14
+Update login styling.

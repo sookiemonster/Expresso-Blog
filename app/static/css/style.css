@@ -1,0 +1,18 @@
+:root {
+    --dark-brown: #3a2323;
+    --interact-blue: #2eceeb;
+    --light-gray: #ececec;
+    --light-brown: #f7cfae;
+    --white: #FFFFFF;
+    --font: 'Open Sans', sans-serif;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    font-family: var(--font);
+}
+
+* {
+    box-sizing: content-box;
+}
