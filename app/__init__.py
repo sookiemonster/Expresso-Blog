@@ -92,13 +92,15 @@ def make():
 
             new_user = c.fetchone()
             os.mkdir("./blogs/%s" % (new_user[0])) # Create a blog directory to store new user's files
+            session['UID'] = new_user[0]
+            session['username'] = new_user[1]
         except sqlite3.IntegrityError:
-            return render_template("register.html", taken=True)
+            return render_template("register.html")
         db.commit()
         db.close()
         return redirect("/")
     else:
-        return render_template("error.html", msg=1)
+        return render_template("register.html")
 @app.route("/edit/<int:index>", methods=["GET", "POST"])
 def edit(index):
     if 'username' in session.keys():
