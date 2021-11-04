@@ -55,3 +55,6 @@ Added error handling for home page
 
 sophieL -- 2021-11-3 21:56
 Added a new page for naming the blog. Does not do anything at the moment. 
+
+joshuaK -- 2021-11-3 22:43
+Now cannot enter empty username and password for register

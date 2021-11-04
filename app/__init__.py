@@ -86,7 +86,7 @@ def new_entry():
 
 @app.route("/register", methods=["GET", "POST"])
 def make():
-    if request.method == "POST":
+    if request.method == "POST" and (request.form['username'] != '' and request.form['password'] != ''):
         db = sqlite3.connect("users.db")
         c = db.cursor()
         try:
