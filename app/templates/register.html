@@ -2,15 +2,27 @@
 <html lang="en">
     <head>
         <title>Register</title>
-        <link rel="icon" type="image/x-icon" href="../static/images/favicon.ico">
-        
+        <link rel="icon" type="image/x-icon" href="../static/images/favicon.ico"> 
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet"> 
+
+        <link rel="stylesheet" href="../static/css/login.css">
         <link rel="stylesheet" href="../static/css/style.css">
     </head>
     <body>
-        <form action="/register", method="POST">
-            <input class="credential-input" type="text" name="username" placeholder="Username">
-            <input class="credential-input" type="password" name="password" placeholder="Password">
-            <input id="credential-submit" type="submit" value="login" />
-        </form>
+      <div class="layout-container">
+        <div class="login-container">
+          <img src="../static/images/logo.png" alt="Expresso">
+          <form action="/register", method="POST">
+              <input class="credential-input" type="text" name="username" placeholder="Username">
+              <input class="credential-input" type="password" name="password" placeholder="Password">
+              <input id="credential-submit" type="submit" value="register" />
+          </form>
+          <span class="prompt-redirect">Already have an account? 
+            <a class="link" href="">Login</a>
+          </span>
+        </div>
+      </div>
     </body>
 </html>

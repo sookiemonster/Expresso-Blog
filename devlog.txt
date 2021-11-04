@@ -58,3 +58,6 @@ Added a new page for naming the blog. Does not do anything at the moment.
 
 joshuaK -- 2021-11-3 22:43
 Now cannot enter empty username and password for register
+
+danielS -- 2021-11-4 9:21
+Update CSS login / register & error handling on login.

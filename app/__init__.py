@@ -4,15 +4,23 @@ import sqlite3
 
 app = Flask(__name__)
 app.secret_key = os.urandom(32)
+
+DB_FILE = "app/users.db"
+
+def is_logged_in():
+    return 'username' in session.keys()
+
 @app.route("/", methods=["GET"])
 def login():
     if not os.path.exists("./blogs"):
         os.mkdir("./blogs")
-    if 'username' in session.keys():
+        
+    if is_logged_in():
         files = []
-        db = sqlite3.connect("users.db")
+        db = sqlite3.connect(DB_FILE)
         c = db.cursor()
         c.execute("SELECT LAST_POST_NUM FROM USERS WHERE UID = ?", (session['UID'],))
+        
         for filename in range(c.fetchone()[0], -1, -1):
             if not os.path.exists("./blogs/{id}".format(id=session['UID'])):
                 os.mkdir("./blogs/{id}")
@@ -22,9 +30,9 @@ def login():
                 c.execute("UPDATE USERS SET LAST_POST_NUM=-1 WHERE UID=?", (session['UID'],))
                 break
             files.append(file.read())
-        return render_template("home.html", logged=True, blogs=files)
+        return render_template("home.html", blogs=files)
     else:
-        db = sqlite3.connect("users.db")
+        db = sqlite3.connect(DB_FILE)
         c = db.cursor()
         make_user_table = ("""CREATE TABLE IF NOT EXISTS USERS(
                 UID INTEGER PRIMARY KEY NOT NULL,
@@ -37,12 +45,16 @@ def login():
         c.execute(make_user_table)
         db.commit()
         db.close()
-        return render_template("login.html", logged=False, blogs=[], user="", id=0, passw="")
+
+        if ('error_message' in session.keys()): 
+            return render_template("login.html", error_message = session.pop('error_message')) # Render & subsequently remove error message
+            
+        return render_template("login.html")
 
 @app.route("/auth", methods=["GET", "POST"])
 def auth():
     if (request.method == "POST"):
-        db = sqlite3.connect("users.db")
+        db = sqlite3.connect(DB_FILE)
         c = db.cursor()
         #select the user that matches the inputed username and password
         c.execute("SELECT * FROM USERS WHERE USERNAME=? AND PASSWORD=?", (request.form['username'], request.form['password']))
@@ -54,7 +66,8 @@ def auth():
             db.close()
             return redirect("/")
         db.close()
-        return render_template("error.html", msg=2)
+        session['error_message'] = "Incorrect username or password"
+        return redirect("/") #ERROR
     else:
         return redirect("/")
 
@@ -66,9 +79,9 @@ def logout():
 
 @app.route("/new_entry", methods=["POST", "GET"])
 def new_entry():
-    if 'username' in session.keys():
+    if is_logged_in():
         if request.method == "POST":
-            db = sqlite3.connect("users.db")
+            db = sqlite3.connect(DB_FILE)
             c = db.cursor()
             c.execute("SELECT LAST_POST_NUM FROM USERS WHERE UID = ?", (session['UID'],))
             file = open("./blogs/{id}/{text}.txt".format(id=session['UID'], text=(c.fetchone()[0] + 1)), "w")
@@ -87,7 +100,7 @@ def new_entry():
 @app.route("/register", methods=["GET", "POST"])
 def make():
     if request.method == "POST" and (request.form['username'] != '' and request.form['password'] != ''):
-        db = sqlite3.connect("users.db")
+        db = sqlite3.connect(DB_FILE)
         c = db.cursor()
         try:
             # Add user credentials to database
@@ -112,9 +125,9 @@ def make():
 
 @app.route("/name_blog", methods=["GET", "POST"])
 def name_blog():
-    if 'username' in session.keys():
+    if is_logged_in():
         if request.method == "POST":
-            db = sqlite3.connect("users.db")
+            db = sqlite3.connect(DB_FILE)
             c = db.cursor()
             c.execute("UPDATE USERS SET BLOG_NAME=? WHERE UID=?", (request.form["blog_name"],session['UID'],))
             db.commit()
@@ -127,8 +140,8 @@ def name_blog():
 
 @app.route("/edit/<int:index>", methods=["GET", "POST"])
 def edit(index):
-    if 'username' in session.keys():
-        db = sqlite3.connect("users.db")
+    if is_logged_in():
+        db = sqlite3.connect(DB_FILE)
         c = db.cursor()
         c.execute("SELECT LAST_POST_NUM FROM USERS WHERE UID=?", (session['UID'],))
         #select last_post_num so index can be used as offset from last
@@ -145,9 +158,9 @@ def edit(index):
 
 @app.route("/view")
 def view():
-    if 'username' in session.keys():
+    if is_logged_in():
         directories = []
-        db = sqlite3.connect("users.db")
+        db = sqlite3.connect(DB_FILE)
         c = db.cursor()
         for dir in os.scandir("./blogs"):
             if (int)(dir.name) != session['UID']:
@@ -159,9 +172,9 @@ def view():
 
 @app.route("/view/<username>")
 def viewid(username):
-    if 'username' in session.keys():
+    if is_logged_in():
         files = []
-        db = sqlite3.connect("users.db")
+        db = sqlite3.connect(DB_FILE)
         c = db.cursor()
         c.execute("SELECT LAST_POST_NUM, UID FROM USERS WHERE USERNAME = ?", (username,))
         user = c.fetchone()
