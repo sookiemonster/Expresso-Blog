@@ -47,7 +47,7 @@ def auth():
         #select the user that matches the inputed username and password
         c.execute("SELECT * FROM USERS WHERE USERNAME=? AND PASSWORD=?", (request.form['username'], request.form['password']))
         user = c.fetchone()
-        #if a user was selected add the user the the session and return home
+        #if a user was selected add the user to the session and return home
         if user != None:
             session['UID'] = user[0]
             session['username'] = user[1]
@@ -106,9 +106,25 @@ def make():
             return render_template("register.html")
         db.commit()
         db.close()
-        return redirect("/")
+        return redirect("/name_blog")
     else:
         return render_template("register.html")
+
+@app.route("/name_blog", methods=["GET", "POST"])
+def name_blog():
+    if 'username' in session.keys():
+        if request.method == "POST":
+            db = sqlite3.connect("users.db")
+            c = db.cursor()
+            c.execute("UPDATE USERS SET BLOG_NAME=? WHERE UID=?", (request.form["blog_name"],session['UID'],))
+            db.commit()
+            db.close()
+            return redirect("/")
+        else:
+            return render_template("name_blog.html")
+    else:
+        return redirect("/")
+
 @app.route("/edit/<int:index>", methods=["GET", "POST"])
 def edit(index):
     if 'username' in session.keys():
@@ -126,6 +142,7 @@ def edit(index):
             return render_template("edit.html", text=file.read(), index=index)
     else:
         return redirect("/")
+
 @app.route("/view")
 def view():
     if 'username' in session.keys():
@@ -139,6 +156,7 @@ def view():
         return render_template("view.html", blogs=directories)
     else:
         return redirect("/")
+
 @app.route("/view/<username>")
 def viewid(username):
     if 'username' in session.keys():

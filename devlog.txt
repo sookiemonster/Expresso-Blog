@@ -52,3 +52,6 @@ Update hover states and layout of login.html.
 
 joshuaK -- 2021-11-3 19:11
 Added error handling for home page
+
+sophieL -- 2021-11-3 21:56
+Added a new page for naming the blog. Does not do anything at the moment. 
