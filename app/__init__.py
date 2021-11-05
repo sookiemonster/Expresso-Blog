@@ -100,8 +100,23 @@ def new_entry():
 @app.route("/register", methods=["GET", "POST"])
 def make():
     if request.method == "POST" and (request.form['username'] != '' and request.form['password'] != ''):
+        
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
+
+        c.execute("SELECT UID FROM USERS WHERE USERNAME=?", ( (request.form['username']), ) )
+        user_exists = bool(c.fetchone())
+
+        if user_exists:
+            db.close()
+            username_taken_error = "Username is taken."
+            return render_template("register.html", error_message=username_taken_error)
+
+        if request.form['password'] != request.form['repassword']:
+            db.close()
+            pass_match_error = "Passwords must match."
+            return render_template("register.html", error_message=pass_match_error)
+
         try:
             # Add user credentials to database
             c.execute("INSERT INTO USERS(USERNAME, PASSWORD, LAST_POST_NUM) VALUES(?, ?, ?)",

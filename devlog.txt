@@ -66,4 +66,7 @@ danielS -- 2021-11-4 14:04
 Update register CSS & HTML. Add styling for making blogs.
 
 danielS -- 2021-11-5 12:30
-Add field validation to text & password inputs.
+Add field validation to text & password inputs. 
+
+danielS -- 2021-11-5 12:45
+Update field validation. Add username already taken and match password errors to /register.
