@@ -46,9 +46,15 @@
           </svg>          
           <form class="credential-container" action="/register", method="POST">
             <span class="error">{{ error_message }}</span>
-            <input class="credential-input" type="text" name="username" placeholder="Username">
-            <input class="credential-input" type="password" name="password" placeholder="Password">
-            <input class="credential-input" type="password" name="repassword" placeholder="Re-enter Password">
+            <input class="credential-input" type="text" name="username" placeholder="Username"
+                pattern="[A-Za-z0-9]+"
+                title="Username should only contain alphanumeric characters">
+              <input class="credential-input" type="password" name="password" placeholder="Password"
+                pattern=".{8,}"
+                title="Password must be at least 8 characters long.">
+            <input class="credential-input" type="password" name="repassword" placeholder="Re-enter Password"
+                pattern=".{8,}"
+                title="Password must be at least 8 characters long.">
             <input id="credential-submit" type="submit" value="register" />
           </form>
           <span class="prompt-redirect">Already have an account? 
