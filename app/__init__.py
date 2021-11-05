@@ -5,7 +5,7 @@ import sqlite3
 app = Flask(__name__)
 app.secret_key = os.urandom(32)
 
-DB_FILE = "app/users.db"
+DB_FILE = "./users.db"
 
 def is_logged_in():
     return 'username' in session.keys()

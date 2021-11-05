@@ -61,3 +61,6 @@ Now cannot enter empty username and password for register
 
 danielS -- 2021-11-4 9:21
 Update CSS login / register & error handling on login.
+
+danielS -- 2021-11-4 14:04
+Update register CSS & HTML. Add styling for making blogs.

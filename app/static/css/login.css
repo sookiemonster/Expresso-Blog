@@ -17,16 +17,31 @@
     gap: var(--margin-dist);
 }
 
+#logo {
+    width: calc(400px + 5vw);
+}
+
 /* INPUT STYLING */
+
+.credential-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--margin-dist);
+}
+
+.error {
+    display: block;
+    color: var(--red);
+    font-size: .8rem;
+}
 
 input {
     font-family: inherit;
 }
 
 .credential-input {
-    display: block;
     padding: 15px 20px;
-    margin: var(--margin-dist);
 
     border-radius: 10px;
     width: calc(200px + 5vw);
@@ -36,10 +51,8 @@ input {
 }
 
 #credential-submit {
-    display: block;
     width: 70%;
     padding: 12px;
-    margin: 0 auto; /* Center on both sides */
     
     border: none;
     border-radius: 20px;
