@@ -1,6 +1,8 @@
+from sys import _current_frames
 from flask import Flask, render_template, request, session, redirect
 import os
 import sqlite3
+from datetime import date, datetime
 
 app = Flask(__name__)
 app.secret_key = os.urandom(32)
@@ -17,20 +19,22 @@ def login():
         
     if is_logged_in():
         files = []
+        id = []
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
-        c.execute("SELECT LAST_POST_NUM FROM USERS WHERE UID = ?", (session['UID'],))
+        c.execute("SELECT * FROM POSTS")
         
-        for filename in range(c.fetchone()[0], -1, -1):
-            if not os.path.exists("./blogs/{id}".format(id=session['UID'])):
-                os.mkdir("./blogs/{id}")
-            if os.path.exists("./blogs/{id}/{filename}.txt".format(id=session['UID'], filename=filename)):
-                file = open("./blogs/{id}/{filename}.txt".format(id=session['UID'], filename=filename))
-            else:
-                c.execute("UPDATE USERS SET LAST_POST_NUM=-1 WHERE UID=?", (session['UID'],))
+        for i in range(20, -1, -1):
+            post = c.fetchone()
+            if (post == None):
                 break
+            if os.path.exists("./blogs/{id}/{filename}.txt".format(id=post[1], filename=post[2])):
+                file = open("./blogs/{id}/{filename}.txt".format(id=post[1], filename=post[2]))
             files.append(file.read())
-        return render_template("home.html", blogs=files)
+            id.append(post[1])
+        files.reverse()
+        id.reverse()
+        return render_template("home.html", blogs=files, id=id)
     else:
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
@@ -42,6 +46,8 @@ def login():
                 LAST_POST_NUM INTEGER,
                 UNIQUE (USERNAME));""")
 
+        c.execute(make_user_table)
+        make_user_table = ("CREATE TABLE IF NOT EXISTS POSTS(Date TEXT, UID INTEGER, POST_NUM);")
         c.execute(make_user_table)
         db.commit()
         db.close()
@@ -84,7 +90,10 @@ def new_entry():
             db = sqlite3.connect(DB_FILE)
             c = db.cursor()
             c.execute("SELECT LAST_POST_NUM FROM USERS WHERE UID = ?", (session['UID'],))
-            file = open("./blogs/{id}/{text}.txt".format(id=session['UID'], text=(c.fetchone()[0] + 1)), "w")
+            new_post = c.fetchone()[0] + 1
+            file = open("./blogs/{id}/{text}.txt".format(id=session['UID'], text=new_post), "w")
+            current = datetime.now()
+            c.execute("INSERT INTO POSTS(Date, UID, POST_NUM) VALUES(?, ?, ?)", ("{date}, {time}".format(date=date.today(), time=current.strftime("%H:%M:%S")), session['UID'], new_post))
             c.execute("UPDATE USERS SET LAST_POST_NUM=LAST_POST_NUM+1 WHERE UID=?", (session['UID'],))
             file.write(request.form['new_entry'])
             file.close()
@@ -141,7 +150,7 @@ def make():
 @app.route("/name_blog", methods=["GET", "POST"])
 def name_blog():
     if is_logged_in():
-        if request.method == "POST":
+        if request.method == "POST" and request.form["blog_name"] != '':
             db = sqlite3.connect(DB_FILE)
             c = db.cursor()
             c.execute("UPDATE USERS SET BLOG_NAME=? WHERE UID=?", (request.form["blog_name"],session['UID'],))

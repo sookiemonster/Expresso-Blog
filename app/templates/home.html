@@ -21,11 +21,15 @@
                 <input type="submit" value="make account">
             </form>
         {% else %}
+            <datalist>{% set post = namespace(value=0) %}</datalist>
             {% for items in blogs%}
                 <h1>{{loop.index}} {{items}}</h1>
-                <form action="/edit/{{loop.index - 1}}" method="GET">
-                    <input type="submit" value=edit_entry>
-                </form>
+                {% if session['UID'] == id[loop.index - 1] %}
+                    {% set post.value = post.value + 1 %}
+                    <form action="/edit/{{post.value - 1}}" method="GET">
+                        <input type="submit" value=edit_entry>
+                    </form>
+                {% endif %}
             {% endfor %}
             <form action = "/new_entry" method="GET">
                 <input type="submit" value="create new entry">

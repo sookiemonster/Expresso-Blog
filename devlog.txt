@@ -70,3 +70,6 @@ Add field validation to text & password inputs.
 
 danielS -- 2021-11-5 12:45
 Update field validation. Add username already taken and match password errors to /register.
+
+joshuaK -- 2021-11-6 2:54
+Home page now displays everyone's most recent blog. Edit blog has also been changed to work with this.
