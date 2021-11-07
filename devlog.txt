@@ -73,3 +73,8 @@ Update field validation. Add username already taken and match password errors to
 
 joshuaK -- 2021-11-6 2:54
 Home page now displays everyone's most recent blog. Edit blog has also been changed to work with this.
+
+danielS -- 2021-11-6 8:03
+Update variable & sql script names to be more descriptive of their function. 
+Replaced file opening to use "with" keyword, so it closes automatically. 
+Added comments to describe function the code.  

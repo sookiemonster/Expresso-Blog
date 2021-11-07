@@ -7,7 +7,29 @@ from datetime import date, datetime
 app = Flask(__name__)
 app.secret_key = os.urandom(32)
 
+# DEFINE CONSTANTS
 DB_FILE = "./users.db"
+MAX_ENTRIES = 20 
+
+# POST TABLE INDICES
+POST_DATE = 0
+POST_UID = 1
+POST_NUM = 2
+
+# DEFINE GLOBAL SQL SCRIPTS
+
+make_user_table = """CREATE TABLE IF NOT EXISTS USERS(
+                    UID INTEGER PRIMARY KEY NOT NULL,
+                    USERNAME TEXT NOT NULL,
+                    PASSWORD TEXT NOT NULL,
+                    BLOG_NAME TEXT,
+                    LAST_POST_NUM INTEGER,
+                    UNIQUE (USERNAME));"""
+
+make_post_table = """CREATE TABLE IF NOT EXISTS POSTS(
+                        DATE TEXT, 
+                        UID INTEGER, 
+                        POST_NUM);"""
 
 def is_logged_in():
     return 'username' in session.keys()
@@ -18,37 +40,37 @@ def login():
         os.mkdir("./blogs")
         
     if is_logged_in():
-        files = []
-        id = []
+        post_list = []
+        uid_list = []
         db = sqlite3.connect(DB_FILE)
+
         c = db.cursor()
         c.execute("SELECT * FROM POSTS")
         
-        for i in range(20, -1, -1):
+        for i in range(MAX_ENTRIES, -1, -1):
+            # Retrieve the subsequent post 
             post = c.fetchone()
+
             if (post == None):
                 break
-            if os.path.exists("./blogs/{id}/{filename}.txt".format(id=post[1], filename=post[2])):
-                file = open("./blogs/{id}/{filename}.txt".format(id=post[1], filename=post[2]))
-            files.append(file.read())
-            id.append(post[1])
-        files.reverse()
-        id.reverse()
-        return render_template("home.html", blogs=files, id=id)
+            
+            post_path = "./blogs/%s/%s.txt" % (post[POST_UID], post[POST_NUM])
+            if os.path.exists(post_path):
+                # Open the post & append it to the lists of posts
+                with open(post_path, 'r') as curr_post:
+                    post_list.append(curr_post.read())
+                    uid_list.append(post[POST_UID])
+
+        # Order the post_list with most recently made posts first
+        post_list.reverse()
+        uid_list.reverse()
+        return render_template("home.html", blogs = post_list, id = uid_list)
     else:
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
-        make_user_table = ("""CREATE TABLE IF NOT EXISTS USERS(
-                UID INTEGER PRIMARY KEY NOT NULL,
-                USERNAME TEXT NOT NULL,
-                PASSWORD TEXT NOT NULL,
-                BLOG_NAME TEXT,
-                LAST_POST_NUM INTEGER,
-                UNIQUE (USERNAME));""")
 
         c.execute(make_user_table)
-        make_user_table = ("CREATE TABLE IF NOT EXISTS POSTS(Date TEXT, UID INTEGER, POST_NUM);")
-        c.execute(make_user_table)
+        c.execute(make_post_table)
         db.commit()
         db.close()
 
@@ -62,24 +84,25 @@ def auth():
     if (request.method == "POST"):
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
-        #select the user that matches the inputed username and password
+
+        # Select the user that matches the inputed username and password
         c.execute("SELECT * FROM USERS WHERE USERNAME=? AND PASSWORD=?", (request.form['username'], request.form['password']))
         user = c.fetchone()
-        #if a user was selected add the user to the session and return home
+
+        # If a user was selected, add the user to the session and return home
         if user != None:
             session['UID'] = user[0]
             session['username'] = user[1]
-            db.close()
-            return redirect("/")
+        else:
+            # If none is selected, return an error (as user does not exist).
+            session['error_message'] = "Incorrect username or password"
+
         db.close()
-        session['error_message'] = "Incorrect username or password"
-        return redirect("/") #ERROR
-    else:
-        return redirect("/")
+    return redirect("/")
 
 @app.route("/logout")
 def logout():
-    #clears session and returns home
+    # Clears session and returns home
     session.clear()
     return redirect("/")
 
@@ -89,14 +112,24 @@ def new_entry():
         if request.method == "POST":
             db = sqlite3.connect(DB_FILE)
             c = db.cursor()
-            c.execute("SELECT LAST_POST_NUM FROM USERS WHERE UID = ?", (session['UID'],))
-            new_post = c.fetchone()[0] + 1
-            file = open("./blogs/{id}/{text}.txt".format(id=session['UID'], text=new_post), "w")
+
+            c.execute("SELECT LAST_POST_NUM FROM USERS WHERE UID = ?", (session['UID'], ))
+            new_post_num = c.fetchone()[0] + 1
+            new_post_path = "./blogs/%s/%s.txt" % (session['UID'], new_post_num)
+
+            # Record the submitted new_entry data into a new .txt file
+            with open(new_post_path, "w") as new_post:
+                new_post.write(request.form['new_entry'])
+            
+            # Add the new post, author user_id, & creation time / date to the post history
             current = datetime.now()
-            c.execute("INSERT INTO POSTS(Date, UID, POST_NUM) VALUES(?, ?, ?)", ("{date}, {time}".format(date=date.today(), time=current.strftime("%H:%M:%S")), session['UID'], new_post))
-            c.execute("UPDATE USERS SET LAST_POST_NUM=LAST_POST_NUM+1 WHERE UID=?", (session['UID'],))
-            file.write(request.form['new_entry'])
-            file.close()
+            c.execute("INSERT INTO POSTS(Date, UID, POST_NUM) VALUES(?, ?, ?)", 
+                ("%s, %s" % (date.today(), current.strftime("%H:%M:%S")), 
+                session['UID'], 
+                new_post)
+            )
+
+            c.execute("UPDATE USERS SET LAST_POST_NUM=LAST_POST_NUM+1 WHERE UID=?", (session['UID'], ))
             db.commit()
             db.close()
             return redirect("/")
