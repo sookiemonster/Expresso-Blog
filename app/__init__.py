@@ -126,7 +126,7 @@ def new_entry():
             c.execute("INSERT INTO POSTS(Date, UID, POST_NUM) VALUES(?, ?, ?)", 
                 ("%s, %s" % (date.today(), current.strftime("%H:%M:%S")), 
                 session['UID'], 
-                new_post)
+                new_post_num)
             )
 
             c.execute("UPDATE USERS SET LAST_POST_NUM=LAST_POST_NUM+1 WHERE UID=?", (session['UID'], ))
