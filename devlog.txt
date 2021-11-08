@@ -83,6 +83,7 @@ sophieL -- 2021-11-8 8:58
 Bugtesting log: Previous blogs folder is not deleted when code is run again, causing many errors during testing.  
 Currently, the numbers on the side of the blog posts are in order, and not chronological as it should be. 
 Multiple spaces in a blog entry appear as only one space on the homepage. 
+Filling up the homepage with blogposts causes new blog posts to disappear. 
 
 danielS -- 2021-11-8 9:06
 Update password verification to accept symbols, not spaces. Passwords now require at least 1 letter and 1 number, & must be at least 8 characters long.
