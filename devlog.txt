@@ -95,3 +95,8 @@ Filling up the homepage with blogposts causes new blog posts to disappear.
 sophieL -- 2021-11-8 09:24
 Bugtesting log: 
 Due to the 20 post limit on the homepage, you can no longer edit your own posts if the total number of posts is over 20. 
+
+
+sophieL -- 2021-11-8 18:25
+Bugtesting log: 
+"invalid literal for int()" error occurs on Mac when trying to go to view_blogs. Not sure if this is a general problem or just one for me.
