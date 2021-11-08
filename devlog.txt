@@ -83,6 +83,7 @@ sophieL -- 2021-11-8 8:58
 Bugtesting log: Previous blogs folder is not deleted when code is run again, causing many errors during testing.  
 Currently, the numbers on the side of the blog posts are in order, and not chronological as it should be. 
 Multiple spaces in a blog entry appear as only one space on the homepage. 
+Blog post limit is 18, instead of 20 as it should be.
 
 joshuaK -- 2021-11-8 9:17
 Now can view only your own blogs
@@ -90,4 +91,7 @@ Now can view only your own blogs
 danielS -- 2021-11-8 9:06
 Update password verification to accept symbols, not spaces. Passwords now require at least 1 letter and 1 number, & must be at least 8 characters long.
 Filling up the homepage with blogposts causes new blog posts to disappear.
-Blog post limit is 18, instead of 20 as it should be.
+
+sophieL -- 2021-11-8 09:24
+Bugtesting log: 
+You can no longer edit posts after post 3. 
