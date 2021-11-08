@@ -71,13 +71,19 @@ Add field validation to text & password inputs.
 danielS -- 2021-11-5 12:45
 Update field validation. Add username already taken and match password errors to /register.
 
-joshuaK -- 2021-11-6 2:54
+joshuaK -- 2021-11-6 20:54
 Home page now displays everyone's most recent blog. Edit blog has also been changed to work with this.
 
-danielS -- 2021-11-6 8:03
+danielS -- 2021-11-6 20:03
 Update variable & sql script names to be more descriptive of their function. 
 Replaced file opening to use "with" keyword, so it closes automatically. 
 Added comments to describe function the code.  
 
+sophieL -- 2021-11-8 8:58
+Bugtesting log: Previous blogs folder is not deleted when code is run again, causing many errors during testing.  
+Currently, the numbers on the side of the blog posts are in order, and not chronological as it should be. 
+Multiple spaces in a blog entry appear as only one space on the homepage. 
+
 danielS -- 2021-11-8 9:06
-Update password verification to accept symbols, not spaces. Passwords now require at least 1 letter and 1 number, & must be at least
+Update password verification to accept symbols, not spaces. Passwords now require at least 1 letter and 1 number, & must be at least 8 characters long.
+
