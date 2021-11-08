@@ -94,4 +94,4 @@ Filling up the homepage with blogposts causes new blog posts to disappear.
 
 sophieL -- 2021-11-8 09:24
 Bugtesting log: 
-You can no longer edit posts after post 3. 
+Due to the 20 post limit on the homepage, you can no longer edit your own posts if the total number of posts is over 20. 
