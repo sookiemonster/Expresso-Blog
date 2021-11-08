@@ -78,3 +78,6 @@ danielS -- 2021-11-6 8:03
 Update variable & sql script names to be more descriptive of their function. 
 Replaced file opening to use "with" keyword, so it closes automatically. 
 Added comments to describe function the code.  
+
+danielS -- 2021-11-8 9:06
+Update password verification to accept symbols, not spaces. Passwords now require at least 1 letter and 1 number, & must be at least
