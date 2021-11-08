@@ -40,6 +40,9 @@
             <form action="/view", method="GET">
                 <input type="submit" value="view other people's blogs">
             </form>
+            <form action="/view/{{session['username']}}", method="GET">
+                <input type="submit" value="view your blogs">
+            </form>
         {% endif %}
     </body>
 </html>

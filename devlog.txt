@@ -83,3 +83,6 @@ sophieL -- 2021-11-8 8:58
 Bugtesting log: NoneType error occurs when view_blogs is selected when there are no other users in the database. 
 Currently, the numbers on the side of the blog posts are in order, and not chronological as it should be. 
 Multiple spaces in a blog entry appear as only one space on the homepage. 
+
+joshuaK -- 2021-11-8 9:17
+Now can view only your own blogs
