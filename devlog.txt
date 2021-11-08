@@ -100,3 +100,4 @@ Due to the 20 post limit on the homepage, you can no longer edit your own posts 
 sophieL -- 2021-11-8 18:25
 Bugtesting log: 
 "invalid literal for int()" error occurs on Mac when trying to go to view_blogs. Not sure if this is a general problem or just one for me.
+Post queue on homepage is supposed to display posts in most recent order, top down. Instead, new posts (after 20 posts in queue) disappear. 
