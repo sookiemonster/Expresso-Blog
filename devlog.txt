@@ -71,10 +71,39 @@ Add field validation to text & password inputs.
 danielS -- 2021-11-5 12:45
 Update field validation. Add username already taken and match password errors to /register.
 
-joshuaK -- 2021-11-6 2:54
+joshuaK -- 2021-11-6 20:54
 Home page now displays everyone's most recent blog. Edit blog has also been changed to work with this.
 
-danielS -- 2021-11-6 8:03
+danielS -- 2021-11-6 20:03
 Update variable & sql script names to be more descriptive of their function. 
 Replaced file opening to use "with" keyword, so it closes automatically. 
 Added comments to describe function the code.  
+
+sophieL -- 2021-11-8 8:58
+Bugtesting log: Previous blogs folder is not deleted when code is run again, causing many errors during testing.  
+Currently, the numbers on the side of the blog posts are in order, and not chronological as it should be. 
+Multiple spaces in a blog entry appear as only one space on the homepage. 
+Blog post limit is 18, instead of 20 as it should be.
+
+joshuaK -- 2021-11-8 9:17
+Now can view only your own blogs
+
+danielS -- 2021-11-8 9:06
+Update password verification to accept symbols, not spaces. Passwords now require at least 1 letter and 1 number, & must be at least 8 characters long.
+Filling up the homepage with blogposts causes new blog posts to disappear.
+
+sophieL -- 2021-11-8 09:24
+Bugtesting log: 
+Due to the 20 post limit on the homepage, you can no longer edit your own posts if the total number of posts is over 20. 
+
+sophieL -- 2021-11-8 18:25
+Bugtesting log: 
+On a MacBook, dir.name pulls up ".DS_Store" instead of the actual number. This is probably a problem limited to my own computer, though. 
+Post queue on homepage is supposed to display posts in most recent order, top down. Instead, new posts (after 20 posts in queue) disappear. 
+
+danielS -- 2021-11-8 20:49
+Update new_entry design. 
+
+danielS -- 2021-11-8 21:28
+Update home templating: Now displays usernames of all the posts. Edited the template such that there is no post number offset, but edit-entry is instead based 
+off the last_post number and decrementing. 

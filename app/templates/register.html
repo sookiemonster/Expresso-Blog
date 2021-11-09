@@ -50,11 +50,11 @@
                 pattern="[A-Za-z0-9]+"
                 title="Username should only contain alphanumeric characters">
               <input class="credential-input" type="password" name="password" placeholder="Password"
-                pattern=".{5,}"
-                title="Password must be at least 5 characters long.">
+                pattern="(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{5,}$"
+                title="Password must only contain letters, numbers, & symbols, be at least 8 characters long, & contain at least 1 number & 1 letter.">
             <input class="credential-input" type="password" name="repassword" placeholder="Re-enter Password"
-                pattern=".{5,}"
-                title="Password must be at least 5 characters long.">
+                pattern="(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{5,}$"
+                title="Password must only contain letters, numbers, & symbols, be at least 8 characters long, & contain at least 1 number & 1 letter.">
             <input id="credential-submit" type="submit" value="register" />
           </form>
           <span class="prompt-redirect">Already have an account? 
