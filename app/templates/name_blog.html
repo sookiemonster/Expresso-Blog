@@ -29,15 +29,19 @@
           <path class="cls-2" d="M645.52,114.79q0,13.36-9.74,20.52t-27.91,7.14q-18.24,0-29.3-5.54V120.15q16.09,7.44,30,7.44,17.91,0,17.91-10.82a8.58,8.58,0,0,0-2-5.78A23.53,23.53,0,0,0,618,106.2a112.79,112.79,0,0,0-12.63-5.61Q589.54,94.47,584,88.37T578.4,72.52q0-11.73,9.45-18.21t25.72-6.48A73,73,0,0,1,644,54.35L637.76,69Q623,62.85,612.91,62.86q-15.36,0-15.36,8.75,0,4.29,4,7.26T619,87.05q11.31,4.38,16.43,8a23.9,23.9,0,0,1,7.6,8.38A24.25,24.25,0,0,1,645.52,114.79Z"/>
           <path class="cls-2" d="M747.49,95q0,22.38-11.48,34.93t-32,12.55a43.8,43.8,0,0,1-22.62-5.78,38.19,38.19,0,0,1-15.11-16.6Q661.05,109.26,661,95q0-22.2,11.4-34.67t32.12-12.47q19.82,0,31.37,12.76T747.49,95ZM681,95q0,31.64,23.36,31.63,23.11,0,23.12-31.63,0-31.29-23.28-31.29-12.22,0-17.71,8.09T681,95Z"/>
         </svg>
-        <a class="nav-link" href="/">My Blog</a>
+        <a class="nav-link" href="/">Home</a>
+        <a class="nav-link" href="my_blog">My Blog</a>
         <a class="nav-link" href="view">Discover</a>
         <a class="nav-link" href="about">About</a>
-      </nav>
-      <div class="layout-container">
-        <form class="credential-container" action="/name_blog" method="POST">
-            <input class="credential-input" type="text" name="blog_name" placeholder="Blog Name">
-            <input id="credential-submit" type="submit" value="Make Blog">
-        </form>
-      </div>
-    </body>
+        <a class="nav-link" href="logout">Logout</a>
+    </nav>
+    <div class="layout-container">
+      <form class="credential-container" action="/name_blog" method="POST">
+          <input class="credential-input" type="text" name="blog_name" placeholder="Blog Name"
+          pattern="[^-\s][\w\s-]+"
+          title="Title must not be empty and not contain symbols.">
+          <input id="credential-submit" type="submit" value="Make Blog">
+      </form>
+    </div>
+  </body>
 </html>

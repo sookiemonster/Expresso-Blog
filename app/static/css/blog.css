@@ -1,0 +1,37 @@
+.layout-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 100px calc(30px + 2vw);
+}
+
+.post-container {
+    display: grid;
+    padding: 30px 40px;
+    gap: 15px;
+    grid-template-areas: "title date"
+                          "desc desc";
+    grid-template-columns: 1fr auto;
+    filter: drop-shadow(0 0 3px var(--med-gray));
+    background-color: var(--white);
+    border-radius: 10px;
+}
+
+.post-title {
+    grid-area: title;
+    font-size: 1.5rem;
+    color: var(--dark-brown);
+    margin: 0;
+}
+
+.post-date {
+    grid-area: date;
+    color: var(--dark-gray);
+    margin: 0;
+}
+
+.post-desc {
+    grid-area: desc;
+    color: var(--dark-gray);
+    margin: 0;
+}

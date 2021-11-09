@@ -29,7 +29,8 @@ make_user_table = """CREATE TABLE IF NOT EXISTS USERS(
 make_post_table = """CREATE TABLE IF NOT EXISTS POSTS(
                         DATE TEXT, 
                         UID INTEGER, 
-                        POST_NUM);"""
+                        POST_NUM INTEGER, 
+                        POST_TITLE TEXT);"""
 
 def is_logged_in():
     return 'username' in session.keys()
@@ -40,9 +41,8 @@ def login():
         os.mkdir("./blogs")
         
     if is_logged_in():
-        post_list = []
-        uid_list = []
-        usernames = {}
+        post_list = [] # FORMAT: [['DESC', UID, POST_NUM], ...]
+        usernames = {} # FORMAT: ['UID' : Username, ...]
         
         db = sqlite3.connect(DB_FILE)
 
@@ -60,22 +60,41 @@ def login():
             if os.path.exists(post_path):
                 # Open the post & append it to the lists of posts
                 with open(post_path, 'r') as curr_post:
-                    post_list.append(curr_post.read())
-                    uid_list.append(post[POST_UID])
+                    post_list.append([curr_post.read(), post[POST_UID], post[POST_NUM]]) # This is the post wrapper
 
         # Order the post_list with most recently made posts first
         post_list.reverse()
-        uid_list.reverse()
 
-        for user_id in uid_list:
-            c.execute("SELECT USERNAME FROM USERS WHERE UID=?", (user_id, ))
-            usernames[user_id] = c.fetchone()[0]
-        
+        WRAPPER_DESC = 0
+        WRAPPER_UID = 1
+        WRAPPER_POST_NUM = 2 
+        WRAPPER_TITLE = 3
+        WRAPPER_DATE = 4
+
+        for post_wrapper in post_list:
+            post_num = post_wrapper[WRAPPER_POST_NUM]
+
+            # Add the UID & corresponding username to the usernames dictionary
+            c.execute("SELECT USERNAME FROM USERS WHERE UID=?", (post_wrapper[WRAPPER_UID], ))
+            usernames[WRAPPER_UID] = c.fetchone()[0]
+
+            # Retrieve title for corresponding post 
+            c.execute("SELECT POST_TITLE FROM POSTS WHERE UID=? AND POST_NUM=?", (post_wrapper[WRAPPER_UID], post_wrapper[POST_NUM]))
+            post_title = c.fetchone()[0]
+
+            # Retrieve title for corresponding post 
+            c.execute("SELECT DATE FROM POSTS WHERE UID=? AND POST_NUM=?", (post_wrapper[WRAPPER_UID], post_wrapper[POST_NUM]))
+            post_date = c.fetchone()[0]
+
+            post_wrapper.append(post_title)
+            post_wrapper.append(post_date)
+
+        print(post_list) 
+
         c.execute("SELECT LAST_POST_NUM FROM USERS WHERE UID=?", (session['UID'], ))
         last_post_num = c.fetchone()[0]
-        print(last_post_num)
 
-        return render_template("home.html", blogs = post_list, id_list = uid_list, last_post_num = last_post_num, usernames = usernames)
+        return render_template("home.html", blogs = post_list, last_post_num = last_post_num, usernames = usernames)
     else:
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
@@ -117,12 +136,64 @@ def logout():
     session.clear()
     return redirect("/")
 
+@app.route("/my_blog", methods=["GET"])
+def my_blog():
+    if is_logged_in():
+        db = sqlite3.connect(DB_FILE)
+        c = db.cursor()
+
+        # Retrieve user's blog name
+        c.execute("SELECT BLOG_NAME FROM USERS WHERE UID = ?", (session['UID'], ))
+        blog_name = c.fetchone()[0]
+
+        if blog_name == None:
+            # Redirect user to name their blog if they haven't done it yet
+            return redirect("/name_blog")
+        else:
+            post_list = []
+            user_path = "./blogs/%s" % (session['UID'])
+            for text_file in os.scandir(user_path):
+                curr_post_num = str(text_file.name).split(".")[0] # Get contents of filename before the file extension (denoted by ".")
+                
+                # Get the current post's title
+                c.execute("SELECT POST_TITLE FROM POSTS WHERE UID=? AND POST_NUM=?", (session['UID'], curr_post_num))
+                post_title = c.fetchone()[0]
+
+                # If the post doesn't have a title, make it an empty string
+                if post_title == None:
+                    post_title = ""
+
+                c.execute("SELECT DATE FROM POSTS WHERE UID=? AND POST_NUM=?", (session['UID'], curr_post_num))
+                post_datetime = c.fetchone()[0]
+
+                # If the post doesn't have a creation date / time, make it an empty string
+                if post_datetime == None:
+                    post_datetime = ""
+                
+                with open(text_file, "r") as post:
+                    post_list.append([post_title, post.read(), post_datetime])
+
+                # Order the post_list with most recently made posts first
+                post_list.reverse()
+
+            return render_template("my_blog.html", blog_name = blog_name, post_list = post_list)
+    else:
+        return redirect("/")
+
 @app.route("/new_entry", methods=["POST", "GET"])
 def new_entry():
     if is_logged_in():
-        if request.method == "POST":
-            db = sqlite3.connect(DB_FILE)
-            c = db.cursor()
+        db = sqlite3.connect(DB_FILE)
+        c = db.cursor()
+
+        # Retrieve user's blog name
+        c.execute("SELECT BLOG_NAME FROM USERS WHERE UID = ?", (session['UID'], ))
+        blog_name = c.fetchone()[0]
+
+        if blog_name == None:
+            # Redirect user to name their blog if they haven't done it yet
+            return redirect("/name_blog")
+        elif request.method == "POST":
 
             c.execute("SELECT LAST_POST_NUM FROM USERS WHERE UID = ?", (session['UID'], ))
             new_post_num = c.fetchone()[0] + 1
@@ -134,16 +205,18 @@ def new_entry():
             
             # Add the new post, author user_id, & creation time / date to the post history
             current = datetime.now()
-            c.execute("INSERT INTO POSTS(Date, UID, POST_NUM) VALUES(?, ?, ?)", 
+            c.execute("INSERT INTO POSTS(Date, UID, POST_NUM, POST_TITLE) VALUES(?, ?, ?, ?)", 
                 ("%s, %s" % (date.today(), current.strftime("%H:%M:%S")), 
                 session['UID'], 
-                new_post_num)
+                new_post_num,
+                request.form['entry-title']
+                )
             )
 
             c.execute("UPDATE USERS SET LAST_POST_NUM=LAST_POST_NUM+1 WHERE UID=?", (session['UID'], ))
             db.commit()
             db.close()
-            return redirect("/")
+            return redirect("/my_blog")
         else:
             return render_template("new_entry.html")
     else:

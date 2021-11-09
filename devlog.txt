@@ -107,3 +107,7 @@ Update new_entry design.
 danielS -- 2021-11-8 21:28
 Update home templating: Now displays usernames of all the posts. Edited the template such that there is no post number offset, but edit-entry is instead based 
 off the last_post number and decrementing. 
+
+danielS -- 2021-11-8 0:39
+Update home templating implementation & user blog structures. Used nested lists instead of separate, indexed lists for posts. Home & My Blog display dates when the post was created.
+Update blog styling. Added general styling to blog and entry layouts in My Blog. 

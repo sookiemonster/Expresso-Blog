@@ -1,5 +1,6 @@
 :root {
     --dark-brown: #3a2323;
+    --dark-gray: #585858;
     --med-brown: #5a3737;
     --interact-blue: #2eceeb;
     --interact-dark-blue: #17a1c4;
@@ -40,6 +41,7 @@ nav {
     align-items: center;
     
     width: 100%;
+    height: 100px;
     gap: 30px;
     padding: 30px 50px;
 }
