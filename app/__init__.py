@@ -9,7 +9,7 @@ app.secret_key = os.urandom(32)
 
 # DEFINE CONSTANTS
 DB_FILE = "./users.db"
-MAX_ENTRIES = 20 
+MAX_ENTRIES = 20
 
 # POST TABLE INDICES
 POST_DATE = 0
@@ -27,9 +27,9 @@ make_user_table = """CREATE TABLE IF NOT EXISTS USERS(
                     UNIQUE (USERNAME));"""
 
 make_post_table = """CREATE TABLE IF NOT EXISTS POSTS(
-                        DATE TEXT, 
-                        UID INTEGER, 
-                        POST_NUM INTEGER, 
+                        DATE TEXT,
+                        UID INTEGER,
+                        POST_NUM INTEGER,
                         POST_TITLE TEXT);"""
 
 def is_logged_in():
@@ -39,23 +39,23 @@ def is_logged_in():
 def login():
     if not os.path.exists("./blogs"):
         os.mkdir("./blogs")
-        
+
     if is_logged_in():
         post_list = [] # FORMAT: [['DESC', UID, POST_NUM], ...]
         usernames = {} # FORMAT: ['UID' : Username, ...]
-        
+
         db = sqlite3.connect(DB_FILE)
 
         c = db.cursor()
         c.execute("SELECT * FROM POSTS")
-        
+
         for i in range(MAX_ENTRIES, -1, -1):
-            # Retrieve the subsequent post 
+            # Retrieve the subsequent post
             post = c.fetchone()
 
             if (post == None):
                 break
-            
+
             post_path = "./blogs/%s/%s.txt" % (post[POST_UID], post[POST_NUM])
             if os.path.exists(post_path):
                 # Open the post & append it to the lists of posts
@@ -67,7 +67,7 @@ def login():
 
         WRAPPER_DESC = 0
         WRAPPER_UID = 1
-        WRAPPER_POST_NUM = 2 
+        WRAPPER_POST_NUM = 2
         WRAPPER_TITLE = 3
         WRAPPER_DATE = 4
 
@@ -78,18 +78,18 @@ def login():
             c.execute("SELECT USERNAME FROM USERS WHERE UID=?", (post_wrapper[WRAPPER_UID], ))
             usernames[WRAPPER_UID] = c.fetchone()[0]
 
-            # Retrieve title for corresponding post 
+            # Retrieve title for corresponding post
             c.execute("SELECT POST_TITLE FROM POSTS WHERE UID=? AND POST_NUM=?", (post_wrapper[WRAPPER_UID], post_wrapper[POST_NUM]))
             post_title = c.fetchone()[0]
 
-            # Retrieve title for corresponding post 
+            # Retrieve title for corresponding post
             c.execute("SELECT DATE FROM POSTS WHERE UID=? AND POST_NUM=?", (post_wrapper[WRAPPER_UID], post_wrapper[POST_NUM]))
             post_date = c.fetchone()[0]
 
             post_wrapper.append(post_title)
             post_wrapper.append(post_date)
 
-        print(post_list) 
+        print(post_list)
 
         c.execute("SELECT LAST_POST_NUM FROM USERS WHERE UID=?", (session['UID'], ))
         last_post_num = c.fetchone()[0]
@@ -104,9 +104,9 @@ def login():
         db.commit()
         db.close()
 
-        if ('error_message' in session.keys()): 
+        if ('error_message' in session.keys()):
             return render_template("login.html", error_message = session.pop('error_message')) # Render & subsequently remove error message
-            
+
         return render_template("login.html")
 
 @app.route("/auth", methods=["GET", "POST"])
@@ -154,7 +154,7 @@ def my_blog():
             user_path = "./blogs/%s" % (session['UID'])
             for text_file in os.scandir(user_path):
                 curr_post_num = str(text_file.name).split(".")[0] # Get contents of filename before the file extension (denoted by ".")
-                
+
                 # Get the current post's title
                 c.execute("SELECT POST_TITLE FROM POSTS WHERE UID=? AND POST_NUM=?", (session['UID'], curr_post_num))
                 post_title = c.fetchone()[0]
@@ -169,7 +169,7 @@ def my_blog():
                 # If the post doesn't have a creation date / time, make it an empty string
                 if post_datetime == None:
                     post_datetime = ""
-                
+
                 with open(text_file, "r") as post:
                     post_list.append([post_title, post.read(), post_datetime])
 
@@ -202,12 +202,12 @@ def new_entry():
             # Record the submitted new_entry data into a new .txt file
             with open(new_post_path, "w") as new_post:
                 new_post.write(request.form['new_entry'])
-            
+
             # Add the new post, author user_id, & creation time / date to the post history
             current = datetime.now()
-            c.execute("INSERT INTO POSTS(Date, UID, POST_NUM, POST_TITLE) VALUES(?, ?, ?, ?)", 
-                ("%s, %s" % (date.today(), current.strftime("%H:%M:%S")), 
-                session['UID'], 
+            c.execute("INSERT INTO POSTS(Date, UID, POST_NUM, POST_TITLE) VALUES(?, ?, ?, ?)",
+                ("%s, %s" % (date.today(), current.strftime("%H:%M:%S")),
+                session['UID'],
                 new_post_num,
                 request.form['entry-title']
                 )
@@ -226,7 +226,7 @@ def new_entry():
 @app.route("/register", methods=["GET", "POST"])
 def make():
     if request.method == "POST" and (request.form['username'] != '' and request.form['password'] != ''):
-        
+
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
 
@@ -329,6 +329,9 @@ def viewid(username):
         return render_template("look.html", blogs=files)
     else:
         return redirect("/")
+@app.errorhandler(404)
+def page_not_found(e):
+    return redirect('/')
 
 if __name__ == "__main__":
     app.debug = True
