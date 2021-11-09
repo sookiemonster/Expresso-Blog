@@ -32,6 +32,28 @@ make_post_table = """CREATE TABLE IF NOT EXISTS POSTS(
                         POST_NUM INTEGER,
                         POST_TITLE TEXT);"""
 
+def get_post_details(cursor, user_id, post_num):
+    """Returns a list of post details. Formatted as [POST_TITLE, POST_DESCRIPTION, POST_DATETIME, POST_NUM]"""
+    # Get the current post's title
+    cursor.execute("SELECT POST_TITLE FROM POSTS WHERE UID=? AND POST_NUM=?", (user_id, post_num))
+    post_title = cursor.fetchone()[0]
+
+    # If the post doesn't have a title, make it an empty string
+    if post_title == None:
+        post_title = ""
+
+    cursor.execute("SELECT DATE FROM POSTS WHERE UID=? AND POST_NUM=?", (user_id, post_num))
+    post_datetime = cursor.fetchone()[0]
+
+    # If the post doesn't have a creation date / time, make it an empty string
+    if post_datetime == None:
+        post_datetime = ""
+    
+    post_path = "./blogs/%s/%s.txt" % (user_id, post_num)
+
+    with open(post_path, "r") as post:
+        return [post_title, post.read(), post_datetime, post_num]
+
 def is_logged_in():
     return 'username' in session.keys()
 
@@ -149,26 +171,9 @@ def my_blog():
             user_path = "./blogs/%s" % (session['UID'])
             for text_file in os.scandir(user_path):
                 curr_post_num = str(text_file.name).split(".")[0] # Get contents of filename before the file extension (denoted by ".")
+                post_list.append(get_post_details(c, session['UID'], curr_post_num))
 
-                # Get the current post's title
-                c.execute("SELECT POST_TITLE FROM POSTS WHERE UID=? AND POST_NUM=?", (session['UID'], curr_post_num))
-                post_title = c.fetchone()[0]
-
-                # If the post doesn't have a title, make it an empty string
-                if post_title == None:
-                    post_title = ""
-
-                c.execute("SELECT DATE FROM POSTS WHERE UID=? AND POST_NUM=?", (session['UID'], curr_post_num))
-                post_datetime = c.fetchone()[0]
-
-                # If the post doesn't have a creation date / time, make it an empty string
-                if post_datetime == None:
-                    post_datetime = ""
-
-                with open(text_file, "r") as post:
-                    post_list.append([post_title, post.read(), post_datetime, curr_post_num])
-
-                # Order the post_list with most recently made posts first
+            # Order the post_list with most recently made posts first
             post_list.reverse()
 
             return render_template("my_blog.html", blog_name = blog_name, post_list = post_list)
@@ -296,32 +301,51 @@ def edit(post_num):
     else:
         return redirect("/")
 
-@app.route("/view")
-def view():
+@app.route("/discover")
+def discover():
     if is_logged_in():
-        directories = []
+        user_list = []
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
-        for dir in os.scandir("./blogs"):
-            if (int)(dir.name) != session['UID']:
-                c.execute("SELECT USERNAME FROM USERS WHERE UID=?", (dir.name,))
-                directories.append(c.fetchone()[0])
-        return render_template("view.html", blogs=directories)
+
+        # Scan through the list of users and append usernames to user_list if they aren't the user that is logged in
+        for user_folder in os.scandir("./blogs"):
+            if (int)(user_folder.name) != session['UID']:
+                c.execute("SELECT BLOG_NAME FROM USERS WHERE UID=?", (user_folder.name, ))
+                blog_name = c.fetchone()
+
+                if blog_name != None:
+                    blog_name = blog_name[0] # Get the first item of the returned tuple if there is one
+                    c.execute("SELECT USERNAME FROM USERS WHERE UID=?", (user_folder.name, ))
+                    user_list.append([c.fetchone()[0], blog_name])
+                
+        return render_template("discover.html", user_list = user_list)
     else:
         return redirect("/")
 
 @app.route("/view/<username>")
-def viewid(username):
+def view_user(username):
     if is_logged_in():
-        files = []
+        post_list = []
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
-        c.execute("SELECT LAST_POST_NUM, UID FROM USERS WHERE USERNAME = ?", (username,))
-        user = c.fetchone()
-        for filename in range(user[0], -1, -1):
-            file = open("./blogs/{id}/{filename}.txt".format(id=user[1], filename=filename))
-            files.append(file.read())
-        return render_template("look.html", blogs=files)
+
+        # Retrieve UID from specified username
+        c.execute("SELECT UID FROM USERS WHERE USERNAME = ?", (username, ))
+        user_id = c.fetchone()[0]
+
+        # Retrieve last_post_num from specified UID
+        c.execute("SELECT LAST_POST_NUM FROM USERS WHERE UID = ?", (user_id, ))
+        last_post_num = c.fetchone()
+
+        if (last_post_num == None):
+            return render_template("blog.html", post_list = post_list)
+        else:
+            last_post_num = last_post_num[0]
+    
+        for post_num in range(last_post_num, -1, -1): # Start from the last post & decrement as you go
+            post_list.append(get_post_details(c, user_id, post_num))
+        return render_template("blog.html", post_list = post_list, username = username)
     else:
         return redirect("/")
 

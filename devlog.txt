@@ -115,6 +115,10 @@ Update blog styling. Added general styling to blog and entry layouts in My Blog.
 danielS -- 2021-11-9 9:17
 Fix wrapping error on posts with long words.
 
-danielS -- 2021-11-9 3:51
+danielS -- 2021-11-9 15:51
 Add styling & update home layout to display recent user posts.
 Fix error where only the user with UID = 0 would be displayed as an author on home.
+
+danielS -- 2021-11-9 16:53
+Add initial styling to disover. Update discover route & add get_post_details() to facilitate getting post_title and description.
+Update view/username to display all proper post details (ie. title, description, & datetime).

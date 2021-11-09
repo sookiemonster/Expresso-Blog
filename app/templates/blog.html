@@ -30,21 +30,23 @@
                 <path class="cls-2" d="M747.49,95q0,22.38-11.48,34.93t-32,12.55a43.8,43.8,0,0,1-22.62-5.78,38.19,38.19,0,0,1-15.11-16.6Q661.05,109.26,661,95q0-22.2,11.4-34.67t32.12-12.47q19.82,0,31.37,12.76T747.49,95ZM681,95q0,31.64,23.36,31.63,23.11,0,23.12-31.63,0-31.29-23.28-31.29-12.22,0-17.71,8.09T681,95Z"/>
             </svg>
             <a class="nav-link" href="/">Home</a>
-            <a class="nav-link" href="my_blog">My Blog</a>
-            <a class="nav-link" href="view">Discover</a>
-            <a class="nav-link" href="about">About</a>
-            <a class="nav-link" href="logout">Logout</a>
+            <a class="nav-link" href="/my_blog">My Blog</a>
+            <a class="nav-link" href="/discover">Discover</a>
+            <a class="nav-link" href="/about">About</a>
+            <a class="nav-link" href="/logout">Logout</a>
         </nav>
         {% set TITLE = 0 %}
         {% set DESC = 1 %}
         {% set DATE = 2 %}
         <div class="layout-container">
             {% for post in post_list %}
-                <div class="post-container">
-                    <span class="post-title">{{ post[TITLE] }}</span>
-                    <span class="post-date">{{ post[DATE] }}</span>
-                    <span class="post-desc">{{ post[DESC] }}</span>
+            <div class="authored-post-container">
+                <div class="post-authored-header">
+                    <span class="post-title">{{ post[TITLE] }}</span> by <a href="/view/{{ username }}" class="post-author">{{ username }}</a>
                 </div>
+                <span class="post-date">{{ post[DATE] }}</span>
+                <p class="post-desc">{{ post[DESC] }}</p>
+            </div>
             {% endfor %}
         </div>
     </body>
