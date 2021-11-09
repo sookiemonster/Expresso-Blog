@@ -32,6 +32,8 @@
 
 .post-desc {
     grid-area: desc;
+    overflow-wrap: break-word;
+    width: 100%;
     color: var(--dark-gray);
     margin: 0;
 }
