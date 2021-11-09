@@ -3,6 +3,7 @@
     --med-brown: #5a3737;
     --interact-blue: #2eceeb;
     --interact-dark-blue: #17a1c4;
+    --med-gray: #c2c2c2;
     --light-gray: #ececec;
     --light-brown: #fadcc4;
     --white: #FFFFFF;
@@ -72,4 +73,8 @@ nav {
 
 .nav-link:hover:after{
     width: 3ch;
+}
+
+input {
+    font-family: inherit;
 }
