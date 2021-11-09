@@ -7,39 +7,25 @@
         <link rel="stylesheet" href="../static/css/style.css">
     </head>
     <body>
-        {% if logged == false %}
-            <form action="/auth", method="POST">
-                <label for="username">Username</label>
-                <input type="text" name="username">
-                <br>
-                <label for="password">Password</label>
-                <input type="text" name="password">
-                <br>
-                <input type="submit" value="login" />
-            </form>
-            <form action="/register", method="GET">
-                <input type="submit" value="make account">
-            </form>
-        {% else %}
-            <datalist>{% set post = namespace(value=0) %}</datalist>
-            {% for items in blogs%}
-                <h1>{{loop.index}} {{items}}</h1>
-                {% if session['UID'] == id[loop.index - 1] %}
-                    {% set post.value = post.value + 1 %}
-                    <form action="/edit/{{post.value - 1}}" method="GET">
-                        <input type="submit" value=edit_entry>
-                    </form>
-                {% endif %}
-            {% endfor %}
-            <form action = "/new_entry" method="GET">
-                <input type="submit" value="create new entry">
-            </form>
-            <form action="/logout", method="GET">
-                <input type="submit" value="logout">
-            </form>
-            <form action="/view", method="GET">
-                <input type="submit" value="view other people's blogs">
-            </form>
-        {% endif %}
+        {% set post_num = namespace(value = last_post_num) %} <!-- Used to define post_num in a global scope -->
+        {% for items in blogs %}
+            <h1>{{ items }} <h2>by {{ usernames[id_list[loop.index - 1]] }}</h2></h1>
+            <!-- Make entry editable if the user has created this specific entry -->
+            {% if session['UID'] == id_list[loop.index - 1] %} 
+                <form action="/edit/{{ post_num.value }}" method="GET">
+                    <input type="submit" value="edit_entry">
+                </form>
+                {% set post_num.value = post_num.value - 1 %}
+            {% endif %}
+        {% endfor %}
+        <form action = "/new_entry" method="GET">
+            <input type="submit" value="create new entry">
+        </form>
+        <form action="/logout", method="GET">
+            <input type="submit" value="logout">
+        </form>
+        <form action="/view", method="GET">
+            <input type="submit" value="view other people's blogs">
+        </form>
     </body>
 </html>

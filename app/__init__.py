@@ -42,6 +42,8 @@ def login():
     if is_logged_in():
         post_list = []
         uid_list = []
+        usernames = {}
+        
         db = sqlite3.connect(DB_FILE)
 
         c = db.cursor()
@@ -64,7 +66,16 @@ def login():
         # Order the post_list with most recently made posts first
         post_list.reverse()
         uid_list.reverse()
-        return render_template("home.html", blogs = post_list, id = uid_list)
+
+        for user_id in uid_list:
+            c.execute("SELECT USERNAME FROM USERS WHERE UID=?", (user_id, ))
+            usernames[user_id] = c.fetchone()[0]
+        
+        c.execute("SELECT LAST_POST_NUM FROM USERS WHERE UID=?", (session['UID'], ))
+        last_post_num = c.fetchone()[0]
+        print(last_post_num)
+
+        return render_template("home.html", blogs = post_list, id_list = uid_list, last_post_num = last_post_num, usernames = usernames)
     else:
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
@@ -195,21 +206,25 @@ def name_blog():
     else:
         return redirect("/")
 
-@app.route("/edit/<int:index>", methods=["GET", "POST"])
-def edit(index):
+@app.route("/edit/<int:post_num>", methods=["GET", "POST"])
+def edit(post_num):
     if is_logged_in():
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
-        c.execute("SELECT LAST_POST_NUM FROM USERS WHERE UID=?", (session['UID'],))
-        #select last_post_num so index can be used as offset from last
-        user = c.fetchone()
+
+        # Retrieve the number of the last post the user made
+        c.execute("SELECT LAST_POST_NUM FROM USERS WHERE UID=?", (session['UID'], ))
+        last_post_num = c.fetchone()[0]
+
+        post_path = "./blogs/%s/%s.txt" % (session['UID'], post_num)
+
         if request.method == "POST":
-            file = open("./blogs/{id}/{index}.txt".format(id = session['UID'], index=user[0] - index), "w")
-            file.write(request.form['edit'])
+            with open(post_path, "w") as post:
+                post.write(request.form['edit'])
             return redirect('/')
         else:
-            file = open("./blogs/{id}/{index}.txt".format(id = session['UID'], index=user[0] - index), "r")
-            return render_template("edit.html", text=file.read(), index=index)
+            with open(post_path, "r") as post:
+                return render_template("edit.html", text=post.read(), index=post_num)
     else:
         return redirect("/")
 
