@@ -89,8 +89,6 @@ def login():
             post_wrapper.append(post_title)
             post_wrapper.append(post_date)
 
-        print(post_list) 
-
         c.execute("SELECT LAST_POST_NUM FROM USERS WHERE UID=?", (session['UID'], ))
         last_post_num = c.fetchone()[0]
 
@@ -174,7 +172,7 @@ def my_blog():
                     post_list.append([post_title, post.read(), post_datetime])
 
                 # Order the post_list with most recently made posts first
-                post_list.reverse()
+            post_list.reverse()
 
             return render_template("my_blog.html", blog_name = blog_name, post_list = post_list)
     else:
