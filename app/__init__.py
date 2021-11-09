@@ -76,7 +76,7 @@ def login():
 
             # Add the UID & corresponding username to the usernames dictionary
             c.execute("SELECT USERNAME FROM USERS WHERE UID=?", (post_wrapper[WRAPPER_UID], ))
-            usernames[WRAPPER_UID] = c.fetchone()[0]
+            usernames[post_wrapper[WRAPPER_UID]] = c.fetchone()[0]
 
             # Retrieve title for corresponding post
             c.execute("SELECT POST_TITLE FROM POSTS WHERE UID=? AND POST_NUM=?", (post_wrapper[WRAPPER_UID], post_wrapper[POST_NUM]))
@@ -89,10 +89,7 @@ def login():
             post_wrapper.append(post_title)
             post_wrapper.append(post_date)
 
-        c.execute("SELECT LAST_POST_NUM FROM USERS WHERE UID=?", (session['UID'], ))
-        last_post_num = c.fetchone()[0]
-
-        return render_template("home.html", blogs = post_list, last_post_num = last_post_num, usernames = usernames)
+        return render_template("home.html", blogs = post_list, usernames = usernames)
     else:
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
@@ -169,7 +166,7 @@ def my_blog():
                     post_datetime = ""
 
                 with open(text_file, "r") as post:
-                    post_list.append([post_title, post.read(), post_datetime])
+                    post_list.append([post_title, post.read(), post_datetime, curr_post_num])
 
                 # Order the post_list with most recently made posts first
             post_list.reverse()
@@ -327,6 +324,7 @@ def viewid(username):
         return render_template("look.html", blogs=files)
     else:
         return redirect("/")
+
 @app.errorhandler(404)
 def page_not_found(e):
     return redirect('/')

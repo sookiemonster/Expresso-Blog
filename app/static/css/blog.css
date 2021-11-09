@@ -17,6 +17,31 @@
     border-radius: 10px;
 }
 
+.authored-post-container {
+    display: grid;
+    padding: 30px 40px;
+    gap: 15px;
+    grid-template-areas: "authorheader date"
+                         "desc desc";
+    grid-template-columns: 1fr auto;
+    filter: drop-shadow(0 0 3px var(--med-gray));
+    background-color: var(--white);
+    border-radius: 10px;;
+}
+
+.post-authored-header {
+    grid-area: authorheader;
+}
+
+.post-author {
+    color: var(--interact-dark-blue);
+    transition: color .1s ease-out;
+}
+
+.post-author:hover {
+    color: var(--interact-blue);
+}
+
 .post-title {
     grid-area: title;
     font-size: 1.5rem;
@@ -36,4 +61,8 @@
     width: 100%;
     color: var(--dark-gray);
     margin: 0;
+}
+
+.post-edit {
+    grid-column: 1/-1;
 }

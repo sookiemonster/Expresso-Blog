@@ -44,6 +44,7 @@ nav {
     height: 100px;
     gap: 30px;
     padding: 30px 50px;
+    background-color: var(--white);
 }
 
 .nav-logo {
