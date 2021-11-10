@@ -317,10 +317,9 @@ def discover():
         for user_folder in os.scandir("./blogs"):
             if (int)(user_folder.name) != session['UID']:
                 c.execute("SELECT BLOG_NAME FROM USERS WHERE UID=?", (user_folder.name, ))
-                blog_name = c.fetchone()
+                blog_name = c.fetchone()[0]
 
                 if blog_name != None:
-                    blog_name = blog_name[0] # Get the first item of the returned tuple if there is one
                     c.execute("SELECT USERNAME FROM USERS WHERE UID=?", (user_folder.name, ))
                     user_list.append([c.fetchone()[0], blog_name])
                 
@@ -356,7 +355,7 @@ def view_user(username):
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return redirect('/')
+    return render_template("error.html")
 
 if __name__ == "__main__":
     app.debug = True

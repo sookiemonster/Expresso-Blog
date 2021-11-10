@@ -45,10 +45,18 @@
                     <h1 class="post-title">{{ post[TITLE] }}</h1>
                     <span class="post-date">{{ post[DATE] }}</span>
                     <p class="post-desc">{{ post[DESC] }}</p>
-                    <a class="post-edit" href="/edit/{{ post[POST_NUM] }}">Edit Entry</a>
+                    <a class="post-edit entry-container" href="/edit/{{ post[POST_NUM] }}">
+                        <div class="entry-button">
+                            <span>Edit Post</span>
+                        </div>
+                    </a>
                 </div>
             {% endfor %}
-            <a href="/new_entry">New Entry</a>
+            <a class="entry-container" href="/new_entry">
+                <div class="entry-button">
+                    <span>New Post</span>
+                </div>
+            </a>
         </div>
     </body>
 </html>

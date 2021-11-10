@@ -58,12 +58,41 @@
 .post-desc {
     grid-area: desc;
     overflow-wrap: break-word;
-    white-space: pre;
+    white-space: pre-wrap;
     width: 100%;
     color: var(--dark-gray);
     margin: 0;
 }
 
+p {
+    margin: 0;
+}
+
+/* NEW & EDIT BUTTONS */
+
 .post-edit {
     grid-column: 1/-1;
+}
+
+.entry-container {
+    text-decoration: none;
+    text-align: center;
+    transition: letter-spacing .15s ease-out;
+}
+
+.entry-button {
+    padding: 12px 20px;
+    border-radius: 10px;
+    background-color: var(--light-brown);
+    color: var(--dark-brown);
+    transition: background-color .15s ease-out;
+
+}
+
+.entry-container:hover {
+    letter-spacing: 2px;
+}
+
+.entry-container:hover > .entry-button {
+    background-color: var(--lightest-brown);
 }

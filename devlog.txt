@@ -128,3 +128,6 @@ Adding styling to edit and newline support
 
 danielS -- 2021-11-9 20:48
 Add entry title character limit.
+
+danielS -- 2021-11-10 9:17
+Style new entry & edit entry. Update discover to not show users that haven't created a blog yet. Update error.html styling.

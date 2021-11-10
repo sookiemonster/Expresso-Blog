@@ -47,14 +47,24 @@
                         <span class="post-title">{{ post[TITLE] }}</span> by <a href="view/{{ usernames[post[UID]] }}" class="post-author">{{ usernames[post[UID]] }}</a>
                     </div>
                     <span class="post-date">{{ post[DATE] }}</span>
-                    <p class="post-desc">{{ post[DESC] }}</p>
+                    <div class="post-desc">
+                        <p>{{ post[DESC] }}</p>
+                    </div>
                     <!-- Make entry editable if the user has created this specific entry -->
                     {% if session['UID'] == post[UID] %} 
-                        <a class="post-edit" href="/edit/{{ post[POST_NUM] }}">Edit Entry</a>
+                        <a class="post-edit entry-container" href="/edit/{{ post[POST_NUM] }}">
+                            <div class="entry-button">
+                                <span>Edit Post</span>
+                            </div>
+                        </a>
                     {% endif %}
                 </div>
             {% endfor %}
-            <a href="/new_entry">New Entry</a>
+            <a class="entry-container" href="/new_entry">
+                <div class="entry-button">
+                    <span>New Post</span>
+                </div>
+            </a>
         </div>
     </body>
 </html>
