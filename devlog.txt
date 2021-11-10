@@ -131,3 +131,6 @@ Add entry title character limit.
 
 danielS -- 2021-11-10 9:17
 Style new entry & edit entry. Update discover to not show users that haven't created a blog yet. Update error.html styling.
+
+danielS -- 2021-11-10 13:46
+Add docstrings to functions.

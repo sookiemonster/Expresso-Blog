@@ -55,10 +55,12 @@ def get_post_details(cursor, user_id, post_num):
         return [post_title, post.read(), post_datetime, post_num]
 
 def is_logged_in():
+    """Returns whether or not a user is logged in."""
     return 'username' in session.keys()
 
 @app.route("/", methods=["GET"])
-def login():
+def home():
+    """Renders a login page if the user is not logged in and displays a list of recent posts by all users if they are."""
     if not os.path.exists("./blogs"):
         os.mkdir("./blogs")
 
@@ -128,6 +130,7 @@ def login():
 
 @app.route("/auth", methods=["GET", "POST"])
 def auth():
+    """Authenticates a user. Throws an error if the user credentials are not found in the database."""
     if (request.method == "POST"):
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
@@ -149,12 +152,13 @@ def auth():
 
 @app.route("/logout")
 def logout():
-    # Clears session and returns home
+    """Logs out the user, clears the session, and redirects user to the login page."""
     session.clear()
     return redirect("/")
 
 @app.route("/my_blog", methods=["GET"])
 def my_blog():
+    """Renders a list of the logged in user's blog posts."""
     if is_logged_in():
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
@@ -182,6 +186,7 @@ def my_blog():
 
 @app.route("/new_entry", methods=["POST", "GET"])
 def new_entry():
+    """Prompts the user to enter new post details and adds it to the database."""
     if is_logged_in():
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
@@ -224,7 +229,8 @@ def new_entry():
 
 
 @app.route("/register", methods=["GET", "POST"])
-def make():
+def register():
+    """Prompts a user to register for a new account & enters their new credentials into the database."""
     if request.method == "POST" and (request.form['username'] != '' and request.form['password'] != ''):
 
         db = sqlite3.connect(DB_FILE)
@@ -266,6 +272,7 @@ def make():
 
 @app.route("/name_blog", methods=["GET", "POST"])
 def name_blog():
+    """Prompts the user to name their blog."""
     if is_logged_in():
         if request.method == "POST" and request.form["blog_name"] != '':
             db = sqlite3.connect(DB_FILE)
@@ -281,6 +288,7 @@ def name_blog():
 
 @app.route("/edit/<int:post_num>", methods=["GET", "POST"])
 def edit(post_num):
+    """Edit a user's post given a specific post number."""
     if is_logged_in():
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
@@ -308,6 +316,7 @@ def edit(post_num):
 
 @app.route("/discover")
 def discover():
+    """Lists the blogs of all users."""
     if is_logged_in():
         user_list = []
         db = sqlite3.connect(DB_FILE)
@@ -329,6 +338,7 @@ def discover():
 
 @app.route("/view/<username>")
 def view_user(username):
+    """Renders the blog of a specified user."""
     if is_logged_in():
         post_list = []
         db = sqlite3.connect(DB_FILE)
@@ -355,6 +365,7 @@ def view_user(username):
 
 @app.errorhandler(404)
 def page_not_found(e):
+    """Returns an error page if a page is not found."""
     return render_template("error.html")
 
 if __name__ == "__main__":
