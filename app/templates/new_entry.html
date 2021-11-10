@@ -37,7 +37,9 @@
         </nav>
         <div class="layout-container">
             <form action="/new_entry" method="POST" class="entry-container">
-                <input id="entry-title" name="entry-title" type="text" class="new-entry" placeholder="Title">
+                <input id="entry-title" name="entry-title" type="text" class="new-entry" placeholder="Title"
+                pattern=".{1,75}"
+                title="Must be 1-75 characters long">
                 <textarea id="entry-description" name="new_entry" class="new-entry" placeholder="Write something..."></textarea>
                 <div class="button-container">
                     <a class="cancel-link" href="/">

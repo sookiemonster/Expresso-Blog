@@ -125,3 +125,6 @@ Update view/username to display all proper post details (ie. title, description,
 
 joshuaK -- 2021-11-9 20:06
 Adding styling to edit and newline support
+
+danielS -- 2021-11-9 20:48
+Add entry title character limit.

@@ -15,8 +15,8 @@
 }
 
 #entry-title {
-    width: 300px;
-    max-width: 50%;
+    min-width: 300px;
+    max-width: 100%;
     padding: 10px 15px;
 }
 
