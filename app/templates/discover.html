@@ -40,8 +40,7 @@
             {% set BLOG_TITLE = 1 %}
             {% for user in user_list %}
             <div class="user-container">
-                <a class="blog-name" href="/view/{{ user[USERNAME] }}">{{ user[BLOG_TITLE] }}</a> by 
-                <span class="username">{{ user[USERNAME] }}</span>
+                <a class="blog-name" href="/view/{{ user[USERNAME] }}">{{ user[BLOG_TITLE] }}</a>
             </div>
             {% endfor %}
         </div>

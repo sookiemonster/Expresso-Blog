@@ -290,14 +290,19 @@ def edit(post_num):
         last_post_num = c.fetchone()[0]
 
         post_path = "./blogs/%s/%s.txt" % (session['UID'], post_num)
-
         if request.method == "POST":
+            c.execute("UPDATE POSTS SET POST_TITLE=? WHERE UID=? AND POST_NUM=?", (request.form['entry-title'], session['UID'], post_num))
+            db.commit()
+            db.close()
             with open(post_path, "w") as post:
                 post.write(request.form['edit'])
             return redirect('/')
         else:
+            c.execute("SELECT POST_TITLE FROM POSTS WHERE UID=? AND POST_NUM=?", (session['UID'], post_num))
             with open(post_path, "r") as post:
-                return render_template("edit.html", text=post.read(), index=post_num)
+                title = c.fetchone()[0]
+                db.close()
+                return render_template("edit.html", text=post.read(), index=post_num, title = title)
     else:
         return redirect("/")
 

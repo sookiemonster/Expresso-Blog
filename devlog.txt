@@ -122,3 +122,6 @@ Fix error where only the user with UID = 0 would be displayed as an author on ho
 danielS -- 2021-11-9 16:53
 Add initial styling to disover. Update discover route & add get_post_details() to facilitate getting post_title and description.
 Update view/username to display all proper post details (ie. title, description, & datetime).
+
+joshuaK -- 2021-11-9 20:06
+Adding styling to edit and newline support
