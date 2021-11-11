@@ -140,3 +140,6 @@ Add blog name to other users blogs
 
 danielS -- 2021-11-11 15:35
 Add about page & styling.
+
+danielS -- 2021-11-11 17:59
+Update routing: Edit redirects to My Blog instead of Home.

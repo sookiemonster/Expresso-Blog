@@ -304,7 +304,7 @@ def edit(post_num):
             db.close()
             with open(post_path, "w") as post:
                 post.write(request.form['edit'])
-            return redirect('/')
+            return redirect('/my_blog')
         else:
             c.execute("SELECT POST_TITLE FROM POSTS WHERE UID=? AND POST_NUM=?", (session['UID'], post_num))
             with open(post_path, "r") as post:
