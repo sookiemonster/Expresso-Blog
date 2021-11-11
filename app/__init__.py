@@ -27,11 +27,11 @@ make_user_table = """CREATE TABLE IF NOT EXISTS USERS(
                     UNIQUE (USERNAME));"""
 
 make_post_table = """CREATE TABLE IF NOT EXISTS POSTS(
-                        POST_ID INTEGER PRIMARY KEY NOT NULL,
                         DATE TEXT,
                         UID INTEGER,
                         POST_NUM INTEGER,
-                        POST_TITLE TEXT);"""
+                        POST_TITLE TEXT,
+                        POST_ID INTEGER PRIMARY KEY NOT NULL);"""
 
 def get_post_details(cursor, user_id, post_num):
     """Returns a list of post details. Formatted as [POST_TITLE, POST_DESCRIPTION, POST_DATETIME, POST_NUM]"""
