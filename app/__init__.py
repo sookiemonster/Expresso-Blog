@@ -367,6 +367,14 @@ def view_user(username):
     else:
         return redirect("/")
 
+@app.route("/about", methods=["GET"])
+def about():
+    if is_logged_in():
+        return render_template("about.html")
+    else:
+        return redirect("/")
+
+
 @app.errorhandler(404)
 def page_not_found(e):
     """Returns an error page if a page is not found."""
