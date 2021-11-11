@@ -134,3 +134,6 @@ Style new entry & edit entry. Update discover to not show users that haven't cre
 
 danielS -- 2021-11-10 13:46
 Add docstrings to functions.
+
+danielS -- 2021-11-11 14:59
+Add blog name to other users blogs
