@@ -362,11 +362,23 @@ def view_user(username):
         else:
             last_post_num = last_post_num[0]
     
+        # Retrieve blog title from specified username
+        c.execute("SELECT BLOG_NAME FROM USERS WHERE UID = ?", (user_id, ))
+        blog_name = c.fetchone()[0]
+
         for post_num in range(last_post_num, -1, -1): # Start from the last post & decrement as you go
             post_list.append(get_post_details(c, user_id, post_num))
-        return render_template("blog.html", post_list = post_list, username = username)
+        return render_template("blog.html", post_list = post_list, username = username, blog_name = blog_name)
     else:
         return redirect("/")
+
+@app.route("/about", methods=["GET"])
+def about():
+    if is_logged_in():
+        return render_template("about.html")
+    else:
+        return redirect("/")
+
 
 @app.errorhandler(404)
 def page_not_found(e):
