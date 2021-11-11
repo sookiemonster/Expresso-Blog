@@ -30,7 +30,8 @@ make_post_table = """CREATE TABLE IF NOT EXISTS POSTS(
                         DATE TEXT,
                         UID INTEGER,
                         POST_NUM INTEGER,
-                        POST_TITLE TEXT);"""
+                        POST_TITLE TEXT,
+                        POST_ID INTEGER PRIMARY KEY NOT NULL);"""
 
 def get_post_details(cursor, user_id, post_num):
     """Returns a list of post details. Formatted as [POST_TITLE, POST_DESCRIPTION, POST_DATETIME, POST_NUM]"""
@@ -71,7 +72,7 @@ def home():
         db = sqlite3.connect(DB_FILE)
 
         c = db.cursor()
-        c.execute("SELECT * FROM POSTS")
+        c.execute("SELECT * FROM POSTS ORDER BY POST_ID DESC LIMIT 20")
 
         for i in range(MAX_ENTRIES, -1, -1):
             # Retrieve the subsequent post
@@ -86,8 +87,7 @@ def home():
                 with open(post_path, 'r') as curr_post:
                     post_list.append([curr_post.read(), post[POST_UID], post[POST_NUM]]) # This is the post wrapper
 
-        # Order the post_list with most recently made posts first
-        post_list.reverse()
+        
 
         WRAPPER_DESC = 0
         WRAPPER_UID = 1
@@ -171,15 +171,15 @@ def my_blog():
             # Redirect user to name their blog if they haven't done it yet
             return redirect("/name_blog")
         else:
+            c.execute("SELECT * FROM POSTS WHERE UID = ? ORDER BY POST_ID DESC LIMIT 20", (session['UID'],))
+            post = c.fetchall()
             post_list = []
-            user_path = "./blogs/%s" % (session['UID'])
-            for text_file in os.scandir(user_path):
-                curr_post_num = str(text_file.name).split(".")[0] # Get contents of filename before the file extension (denoted by ".")
-                post_list.append(get_post_details(c, session['UID'], curr_post_num))
-
-            # Order the post_list with most recently made posts first
-            post_list.reverse()
-
+            i = 0
+            while (i < len(post)):
+                with open("./blogs/%s/%s.txt" % (session['UID'], post[i][2]), 'r') as file:
+                    post_list.append([post[i][3], file.read(), post[i][0], post[i][2]])
+                i+=1
+            
             return render_template("my_blog.html", blog_name = blog_name, post_list = post_list)
     else:
         return redirect("/")
@@ -204,9 +204,12 @@ def new_entry():
             new_post_num = c.fetchone()[0] + 1
             new_post_path = "./blogs/%s/%s.txt" % (session['UID'], new_post_num)
 
+            post = request.form['new_entry']
+            post = post.rstrip()
+
             # Record the submitted new_entry data into a new .txt file
             with open(new_post_path, "w") as new_post:
-                new_post.write(request.form['new_entry'])
+                new_post.write(post)
 
             # Add the new post, author user_id, & creation time / date to the post history
             current = datetime.now()
@@ -302,8 +305,10 @@ def edit(post_num):
             c.execute("UPDATE POSTS SET POST_TITLE=? WHERE UID=? AND POST_NUM=?", (request.form['entry-title'], session['UID'], post_num))
             db.commit()
             db.close()
+            postText = request.form['edit']
+            postText = postText.rstrip()
             with open(post_path, "w") as post:
-                post.write(request.form['edit'])
+                post.write(postText)
             return redirect('/my_blog')
         else:
             c.execute("SELECT POST_TITLE FROM POSTS WHERE UID=? AND POST_NUM=?", (session['UID'], post_num))

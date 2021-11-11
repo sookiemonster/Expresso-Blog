@@ -141,5 +141,9 @@ Add blog name to other users blogs
 danielS -- 2021-11-11 15:35
 Add about page & styling.
 
+joshuaK -- 2021-11-11 16:04
+If user adds newlines or spaces to end of post they are removed and do not take up space
+website now correctly shows the most recent 20 posts
+
 danielS -- 2021-11-11 17:59
 Update routing: Edit redirects to My Blog instead of Home.
