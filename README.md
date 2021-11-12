@@ -1,6 +1,8 @@
 # Expresso Blog by Espresso
 Roster: Daniel Sooknanan, Sophie Liu, Joshua Kloepfer
 
+Expresso is a blogging website where you can create your own blog! Register for an account, name your blog, and you’re on your way to expressing yourself. The home menu will also display recent posts made by other people, while the Discover tab allows you to look at specific people, and what they’ve posted on their blog! Edit your posts at the click of a button and post whenever you feel like it!
+
 ## Setting up 
 ```bash
 # Get repo
