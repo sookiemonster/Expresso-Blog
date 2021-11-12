@@ -151,6 +151,9 @@ Update routing: Edit redirects to My Blog instead of Home.
 sophieL -- 2021-11-11 21:05
 Deleted obsolete settings.html file. 
 
+danielS -- 2021-11-11 21:24
+Update about page to more accurately describe database information.
+
 DESIGN DOCUMENT SUMMARIES: 
 design_wiki0.pdf feedback: 
 - Use standard heading format. 
@@ -160,7 +163,7 @@ design_wiki0.pdf feedback:
 - Add a component map. 
 - Detail what each person is supposed to do more clearly. 
 
-Changes to design.pdf: 
+Changes to design1.pdf: 
 - Team name decided, standard heading used. 
 - Javascript removed from file structure tree. 
 - Arrows added to front-end sitemap. 
@@ -169,5 +172,13 @@ Changes to design.pdf:
 - Description of table for user data added. 
 - Roles are now more descriptive. 
 
-danielS -- 2021-11-11 21:24
-Update about page to more accurately describe database information.
+Changes to (final) design.pdf
+- Removed Patrick's name from the header. 
+- Updated file structure tree to be more accurate. 
+- Removed account_settings from front-end sitemap. 
+- Added more arrows to front-end sitemap. 
+- Removed Account Settings and added Discover to page descriptions
+- Changed tense of design document to be present, instead of future. 
+- Updated USERS table descriptions. 
+- Added description of POSTS table. 
+- Updated roles to be more accurate to what people actually did. 
