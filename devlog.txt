@@ -163,7 +163,7 @@ design_wiki0.pdf feedback:
 - Add a component map. 
 - Detail what each person is supposed to do more clearly. 
 
-Changes to design1.pdf: 
+Changes to design.pdf: 
 - Team name decided, standard heading used. 
 - Javascript removed from file structure tree. 
 - Arrows added to front-end sitemap. 
