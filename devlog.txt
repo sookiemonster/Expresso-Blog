@@ -147,3 +147,21 @@ website now correctly shows the most recent 20 posts
 
 danielS -- 2021-11-11 17:59
 Update routing: Edit redirects to My Blog instead of Home.
+
+DESIGN DOCUMENT SUMMARIES: 
+design_wiki0.pdf feedback: 
+- Use standard heading format. 
+- Remove any thoughts of planned javascript. 
+- Create better connections between pages in the front-end sitemap. 
+- Make a better description of the tables. 
+- Add a component map. 
+- Detail what each person is supposed to do more clearly. 
+
+Changes to design.pdf: 
+- Team name decided, standard heading used. 
+- Javascript removed from file structure tree. 
+- Arrows added to front-end sitemap. 
+- Wrote a description of each page in the website. 
+- Added component map. 
+- Description of table for user data added. 
+- Roles are now more descriptive. 
