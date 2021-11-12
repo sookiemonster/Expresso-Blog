@@ -25,7 +25,8 @@ Install dependencies
 pip install -r requirements.txt
 ```
 
-Run
+Run __init__.py
 ```bash
+cd .\app\
 python3 __init__.py
 ```
