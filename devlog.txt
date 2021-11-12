@@ -168,3 +168,6 @@ Changes to design.pdf:
 - Added component map. 
 - Description of table for user data added. 
 - Roles are now more descriptive. 
+
+danielS -- 2021-11-11 21:24
+Update about page to more accurately describe database information.

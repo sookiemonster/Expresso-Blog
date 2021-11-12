@@ -38,10 +38,9 @@
         <div class="layout-container">
             <h2>What is Expresso?</h2>
             <p>
-                Expresso is a blogging website where you can create your own blog! Register for an account, name your blog, 
-                and you’re on your way to expressing yourself. The home menu will also display recent posts made by other people, 
-                while the Discover tab allows you to look at specific people, 
-                and what they’ve posted on their blog! Edit your posts at the click of a button.
+                Expresso is a blogging website where you can create your own blog! Register for an account, name your blog, and you’re on your way to expressing yourself. 
+                The home menu will also display recent posts made by other people, while the Discover tab allows you to look at specific people, and what they’ve posted on 
+                their blog! Edit your posts at the click of a button and post whenever you feel like it!
             </p>
             <h3>The Devos</h3>
             <div class="devo-list">
@@ -51,13 +50,13 @@
             </div>
             <h3>How does it work?</h3><a class="github-redirect" href="https://github.com/sookiemonster/Expresso-Blog">Check it out on Github</a>
             <p>
-                A database table is used to store each user. The table contains the user ID (UID), the username, the password, 
-                the blog name, and the number of posts in their blog. This allows the website to display the posts in reverse 
-                chronological order. Another table is used to store the information about each post, although the text itself is 
-                not stored. This table stores the date and time the post was created, the UID of the user who made it, the post 
-                number in the blog, and the title of the post. The text of each post is stored in a separate folder, called blogs. 
-                This folder has a separate folder for each UID, labeled accordingly. Posts are stored as text files in these folders, 
-                keeping them from slowing the database down as the amount of posts gets larger. 
+                An SQLite Database stores 2 tables, USERS & POSTS. The USER table contains the User ID (UID), the username, the password, 
+                the blog name, and the number of posts in their blog. This allows the website to display the posts in reverse chronological 
+                order. POSTS is used to store the information about each post, although the text itself is not stored. This table stores the 
+                date and time the post was created, the UID of the user who made it, the post number in the blog, and the title of the post. 
+                The text of each post is stored in a separate folder, called blogs. This folder has a separate folder for each UID, labeled 
+                accordingly. Posts are stored as text files in these folders, keeping them from slowing the database down as the amount of 
+                posts gets larger.
             </p>
         </div>
     </body>
