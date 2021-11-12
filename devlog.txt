@@ -148,6 +148,9 @@ website now correctly shows the most recent 20 posts
 danielS -- 2021-11-11 17:59
 Update routing: Edit redirects to My Blog instead of Home.
 
+sophieL -- 2021-11-11 21:05
+Deleted obsolete settings.html file. 
+
 DESIGN DOCUMENT SUMMARIES: 
 design_wiki0.pdf feedback: 
 - Use standard heading format. 
