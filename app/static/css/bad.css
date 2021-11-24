@@ -1,0 +1,21 @@
+* {
+  font-weight: 1000;
+  font-family: Comic Sans MS;
+}
+
+div {
+  background-color: #F8AD9D;
+}
+
+body {
+  background-color: #F08080;
+}
+
+a {
+  text-decoration: none;
+  color: green;
+}
+
+nav {
+    text-align: center;
+}
