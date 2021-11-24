@@ -40,13 +40,14 @@ Run __init__.py
 python3 __init__.py
 ```
 
-##Edits and CSS Check
 
-###The Sad Hatters
+## Edits and CSS Check
+
+### The Sad Hatters
 - Noakai Aronesty
 - Annabel Zhang
 
-###Notes
+### Notes
 - css folder inside static folder is cool. There aren't any other static files, but it's still a good practice
 - The website works very well without css, though the way in which blogs are created, in that you create a blog without creating the first entry, is strange.
 - Without css, the links and texts are smaller and closer together, but usable. The logo is also enormous.
