@@ -41,7 +41,7 @@ python3 __init__.py
 ```
 
 
-## Edits and CSS Check
+# Edits and CSS Check
 
 ### The Sad Hatters
 - Noakai Aronesty
