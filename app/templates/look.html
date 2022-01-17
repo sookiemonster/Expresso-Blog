@@ -4,7 +4,7 @@
         <title>Expresso</title>
         <link rel="icon" type="image/x-icon" href="../static/images/favicon.ico">
 
-        <link rel="stylesheet" href="../static/css/style.css">
+        <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
     </head>
     <body>
             {% for items in blogs%}
